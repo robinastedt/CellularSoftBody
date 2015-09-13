@@ -44,7 +44,7 @@ public class Config {
                             + "  ############################################\n"
                             + "  ##                                        ##\n"
                             + "  ##         [ CELLULAR SOFT BODY ]         ##\n"
-                            + "  ##             Version: 0.3.2             ##\n"
+                            + "  ##             Version: 0.3.5             ##\n"
                             + "  ##          Author: Robin Åstedt          ##\n"
                             + "  ##        http://robin.astedt.com         ##\n"
                             + "  ##           Copyright \u00a9 2015             ##\n"
