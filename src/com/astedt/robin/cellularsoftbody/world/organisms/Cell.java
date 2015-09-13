@@ -7,12 +7,14 @@ import com.astedt.robin.cellularsoftbody.render.DrawingComponent;
 import com.astedt.robin.cellularsoftbody.physics.Physics;
 import com.astedt.robin.cellularsoftbody.world.genetics.Chromosome;
 import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
+import com.astedt.robin.quadtree.Node;
+import com.astedt.robin.quadtree.QuadTreeObject;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
 
-public class Cell
+public class Cell implements QuadTreeObject
 {
     public double x, y;
     public double xv, yv;
@@ -31,11 +33,11 @@ public class Cell
     public int neighbours;
     public int surfaceArea;
     public Cell[] n;
-    private boolean initialized;
     private int painCounter;
     private int pleasureCounter;
-    private double health;
     public boolean seperate;
+    
+    private Node node;
     
     public int gen;
 
@@ -87,12 +89,11 @@ public class Cell
         uvectx = 0.0;
         dir = Math.random() * PIdouble - PI;
         dirv = 0.0;
-        maxSize = 20;
+        maxSize = Config.CELL_MAX_SIZE;
         size = maxSize * Config.CELL_INIT_SIZE;
         seperate = false;
         painCounter = 0;
         pleasureCounter = 0;
-        health = 100.0;
         n = new Cell[6];
         neighbours = 0;
         if (parent != null) {
@@ -172,7 +173,6 @@ public class Cell
         rotationFrictionMultiplier = 1.0 - Config.FRICTION_ROTATION;
         
         Physics.cells.add(this);
-        initialized = true;
     }
     
     
@@ -226,7 +226,8 @@ public class Cell
         }
 
 
-        for (Cell c : Physics.cells) {
+        for (QuadTreeObject qtObject : node.getObjects()) {
+            Cell c = (Cell)qtObject;
             if (c != this)
             {
                 double xx = x - c.x;
@@ -456,6 +457,25 @@ public class Cell
             pleasureCounter = Config.CELL_PLEASURE_DURATION;
             
         }
+    }
+
+    @Override
+    public double getX() {
+        return x;
+    }
+
+    @Override
+    public double getY() {
+        return y;
+    }
+
+    @Override
+    public void setNode(Node node) {
+        this.node = node;
+    }
+    
+    public Node getNode() {
+        return node;
     }
 
 }

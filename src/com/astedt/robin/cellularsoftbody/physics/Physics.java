@@ -4,7 +4,10 @@ import com.astedt.robin.cellularsoftbody.world.organisms.Cell;
 import com.astedt.robin.cellularsoftbody.Config;
 import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
 import com.astedt.robin.cellularsoftbody.Main;
+import com.astedt.robin.quadtree.QuadTree;
+import com.astedt.robin.quadtree.QuadTreeObject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Physics implements Runnable {
     
@@ -13,6 +16,9 @@ public class Physics implements Runnable {
     public static ArrayList<Cell> cells;
     public static ArrayList<Cell> cellsToRemove;
     public static ArrayList<Cell> cellsToGrow;
+    
+    public static long treeBuildTime;
+    public static long cellRequests;
     
     public Physics() {
         initialized = false;
@@ -36,8 +42,8 @@ public class Physics implements Runnable {
         cellsToRemove = new ArrayList<Cell>();
         cellsToGrow = new ArrayList<>();
         
-        int n1 = 10;
-        int n2 = n1 * Config.HEIGHT / Config.WIDTH;
+        int n1 = 8;
+        int n2 = 6;
         
         for (int x = 0; x < n1; x++) {
             for (int y = 0; y < n2; y++) {
@@ -140,6 +146,13 @@ public class Physics implements Runnable {
     //Runs once per tick
     synchronized void tick() {
         
+        long startTimeTree = System.nanoTime();
+        List<QuadTreeObject> qtObjects = new ArrayList<>();
+        qtObjects.addAll(cells);
+        QuadTree tree = new QuadTree(qtObjects, 0, 0, Config.WIDTH, Config.HEIGHT, Config.CELL_MAX_SIZE / 2);
+        treeBuildTime = System.nanoTime() - startTimeTree;
+        long cellRequestCounter = 0;
+        
         for (Cell cell : cells)
         {
             cell.PreTick();
@@ -147,7 +160,9 @@ public class Physics implements Runnable {
         for (Cell cell : cells)
         {
             cell.Tick();
+            cellRequestCounter += cell.getNode().getObjects().size();
         }
+        cellRequests = cellRequestCounter;
         
         if (cellsToGrow.size() > 0 || cellsToRemove.size() > 0) {
             synchronized (Main.monitor) 

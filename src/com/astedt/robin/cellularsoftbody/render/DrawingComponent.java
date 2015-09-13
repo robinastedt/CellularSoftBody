@@ -32,7 +32,6 @@ public class DrawingComponent extends JComponent{
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, Config.WIDTH, Config.HEIGHT);
             
-            
             synchronized (Main.monitor) {
                 //Draw cells: Layer 0
                 for (Cell c : Physics.cells) {

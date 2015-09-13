@@ -7,7 +7,12 @@ import com.astedt.robin.cellularsoftbody.physics.BenchmarkTickTimerListener;
 import com.astedt.robin.cellularsoftbody.render.BenchmarkFrameTimerListener;
 import com.astedt.robin.cellularsoftbody.render.UpdateFrameListener;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -63,6 +68,7 @@ public class Main {
         window.add(DC);
         window.setResizable(false);
         window.pack();
+        window.pack(); //Without calling it twice it sometimes creates a window to large... >_>
         window.setVisible(true);
         
         //Request focus for console
@@ -98,12 +104,29 @@ public class Main {
             console.Exit();
         }
         else if (input[0].equalsIgnoreCase("clear")) console.Clear();
-        else if (input[0].equalsIgnoreCase("help")) System.out.println(Config.CONSOLE_HELP);
+        else if (input[0].equalsIgnoreCase("help")) {
+            System.out.println(Config.CONSOLE_HELP_1);
+            // String literals have a max size of 65535 so we're dividing it up in two constants
+            // Console can't handle parsing more than 65535 chars at a time, hence this little hack
+            Timer timer = new Timer(1, (ActionEvent ae) -> {
+                System.out.println(Config.CONSOLE_HELP_2);
+            });
+            timer.setRepeats(false);
+            timer.start();
+            
+        }
         else if (input[0].equalsIgnoreCase("get")) {
             if (input.length > 1) {
                 if (input[1].equalsIgnoreCase("fps")) System.out.println("fps=" + fps);
                 else if (input[1].equalsIgnoreCase("tps")) System.out.println("tps=" + tps);
                 else if (input[1].equalsIgnoreCase("cellcount")) System.out.println("cellcount=" + Physics.cells.size());
+                else if (input[1].equalsIgnoreCase("treebuildtime")) System.out.println("treebuildtime=" + Physics.treeBuildTime + "/" + 1000000000L / tps + " (" + String.format("%.3f", Physics.treeBuildTime / 10000000.0 * tps) + "%)");
+                else if (input[1].equalsIgnoreCase("cellrequests")) {
+                    long cellRequests = Physics.cellRequests;
+                    long maxRequests = Physics.cells.size() * Physics.cells.size();
+                    double effiencyPercent = 100.0 * cellRequests / maxRequests;
+                    System.out.println("cellrequests=" + cellRequests + "/" + maxRequests + " (" + String.format("%.3f", effiencyPercent) + "%)");
+                }
                 else System.out.println("Error: Unrecognized variable: \"" + input[1] + "\"");
             }
             else System.out.println("Error: No variable specified!");

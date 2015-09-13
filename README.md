@@ -1,3 +1,7 @@
+###0.3.5 [2015-09-13]
+* Implemented a quadtree data structure for collision detection, greatly improving performance, especially for larger number of cells.
+* Added more variables available with the get command in the console: "treebuildtime" and "cellrequests"
+
 ###0.3.4 [2015-09-13]
 * Organism object is now fully omitted and removed all legacy use of it.
 
