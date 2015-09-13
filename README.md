@@ -1,3 +1,6 @@
+###0.3.4 [2015-09-13]
+* Organism object is now fully omitted and removed all legacy use of it.
+
 ###0.3.3 [2015-09-13]
 * New cells now properly checks if there are more cells around it that it could bind to. It achieves this by working its way around from its parent asking already bound neighbors for  their neighbors. This still needs more work however.
 * Due to the improved binding algorithm some of the graphical glitches are now fixed.

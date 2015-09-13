@@ -28,7 +28,6 @@ public class Cell
     public Cell parent;
     private boolean grown;
     public int ox, oy;
-    public Organism o;
     public int neighbours;
     public int surfaceArea;
     public Cell[] n;
@@ -244,7 +243,7 @@ public class Cell
                     yforce += dy / d * force;
                     
                     
-                    if (c.neighbours == 0 && c.o != o)
+                    if (c.neighbours == 0)
                     {
                         double pdx = -dy; // x component of vector clockwise perpendicular to distance vector
                         double pdy = dx;  // y component of vector clockwise perpendicular to distance vector
@@ -440,87 +439,7 @@ public class Cell
         if (antiClockwiseDiff < clockwiseDiff) return -antiClockwiseDiff;
         else return clockwiseDiff;
     }
-
-    public void Init()
-    {
-
-        neighbours = 0;
-
-        for (int i = 0; i < 6; i++)
-        {
-            n[i] = null;
-        }
-
-
-        if (ox > 0 && o.GetCell(ox - 1, oy) != null)
-        {
-            neighbours++;
-            n[0] = o.GetCell(ox - 1, oy);
-        }
-
-        if (ox < Organism.cellArrayWidth - 1 && o.GetCell(ox + 1, oy) != null)
-        {
-            neighbours++;
-            n[3] = o.GetCell(ox + 1, oy);
-        }
-
-        if (oy % 2 == 1)
-        {
-            if (oy > 0 && o.GetCell(ox, oy - 1) != null)
-            {
-                neighbours++;
-                n[1] = o.GetCell(ox, oy - 1);
-            }
-
-            if (ox < Organism.cellArrayWidth - 1 && oy > 0 && o.GetCell(ox + 1, oy - 1) != null)
-            {
-                neighbours++;
-                n[2] = o.GetCell(ox + 1, oy - 1);
-            }
-
-            if (ox < Organism.cellArrayWidth - 1 && oy < Organism.cellArrayHeight - 1 && o.GetCell(ox + 1, oy + 1) != null)
-            {
-                neighbours++;
-                n[4] = o.GetCell(ox + 1, oy + 1);
-            }
-            if (oy < Organism.cellArrayHeight - 1 && o.GetCell(ox, oy + 1) != null)
-            {
-                neighbours++;
-                n[5] = o.GetCell(ox, oy + 1);
-            }
-        }
-        else
-        {
-            if (ox > 0 && oy > 0 && o.GetCell(ox - 1, oy - 1) != null)
-            {
-                neighbours++;
-                n[1] = o.GetCell(ox - 1, oy - 1);
-            }
-
-            if (oy > 0 && o.GetCell(ox, oy - 1) != null)
-            {
-                neighbours++;
-                n[2] = o.GetCell(ox, oy - 1);
-            }
-
-            if (oy < Organism.cellArrayHeight - 1 && o.GetCell(ox, oy + 1) != null)
-            {
-                neighbours++;
-                n[4] = o.GetCell(ox, oy + 1);
-            }
-            if (ox > 0 && oy < Organism.cellArrayHeight - 1 && o.GetCell(ox - 1, oy + 1) != null)
-            {
-                neighbours++;
-                n[5] = o.GetCell(ox - 1, oy + 1);
-            }
-        }
-
-        surfaceArea = 6 - neighbours;
-        initialized = true;
-
-        translationFrictionMultiplier = 1.0 - (Config.FRICTION_TRANSLATION * (surfaceArea + 6) / 6);
-        rotationFrictionMultiplier = 1.0 - Config.FRICTION_ROTATION;
-    }
+    
     
     public void TriggerPain()
     {

@@ -4,17 +4,11 @@ import com.astedt.robin.cellularsoftbody.world.organisms.Cell;
 import com.astedt.robin.cellularsoftbody.Config;
 import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
 import com.astedt.robin.cellularsoftbody.Main;
-import com.astedt.robin.cellularsoftbody.world.organisms.Organism;
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Physics implements Runnable {
     
     public static boolean initialized;
-    public static Organism o1, o2;
     
     public static ArrayList<Cell> cells;
     public static ArrayList<Cell> cellsToRemove;
