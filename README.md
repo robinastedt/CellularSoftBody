@@ -1,4 +1,4 @@
-###0.3.3 [2015-9-13]
+###0.3.3 [2015-09-13]
 * New cells now properly checks if there are more cells around it that it could bind to. It achieves this by working its way around from its parent asking already bound neighbors for  their neighbors. This still needs more work however.
 * Due to the improved binding algorithm some of the graphical glitches are now fixed.
 * Phantom forces has been located to be caused when two cells grow into the same location where there's no room for both.
