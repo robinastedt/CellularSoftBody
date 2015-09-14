@@ -33,6 +33,9 @@ public class DrawingComponent extends JComponent{
             g2.fillRect(0, 0, Config.WIDTH, Config.HEIGHT);
             
             synchronized (Main.monitor) {
+                //Draw KD-Tree
+                if (Config.DRAW_TREE) Physics.tree.draw(g2);
+                
                 //Draw cells: Layer 0
                 for (Cell c : Physics.cells) {
                     c.Draw(g2, 0);

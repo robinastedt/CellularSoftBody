@@ -133,7 +133,9 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 	public synchronized void actionPerformed(ActionEvent evt)
 	{
             if (!textField.getText().isEmpty()) {
-                previousCommands.add(textField.getText());
+                if (previousCommands.isEmpty() || !textField.getText().equalsIgnoreCase(previousCommands.get(previousCommands.size()-1))) {
+                    previousCommands.add(textField.getText());
+                }
                 previousCommandsIndex = previousCommands.size();
                 textArea.append("> " + textField.getText() + "\n");
                 textArea.setCaretPosition(textArea.getDocument().getLength());

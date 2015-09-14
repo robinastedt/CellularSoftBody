@@ -20,11 +20,12 @@ public class Dna {
                 for (int ii = 0; ii < 6 && i + 1 < genome.length; ii++) {
                     i++;
                     if ((genome[i] & 0xC0) == 0xC0) {
-                        growthIndex[ii]++;
                         if ((genome[i] & 0x01) != 0) growthIndex[ii]++;
                         if ((genome[i] & 0x02) != 0) growthIndex[ii]++;
                         if ((genome[i] & 0x04) != 0) growthIndex[ii]++;
                         if ((genome[i] & 0x08) != 0) growthIndex[ii]++;
+                        if ((genome[i] & 0x10) != 0) growthIndex[ii]++;
+                        if ((genome[i] & 0x20) != 0) growthIndex[ii]++;
                     }
                 }
                 chromosomes.add(new Chromosome(index, growthIndex));

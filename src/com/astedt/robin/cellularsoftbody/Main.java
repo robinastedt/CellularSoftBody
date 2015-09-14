@@ -162,6 +162,9 @@ public class Main {
                 else if (input[1].equalsIgnoreCase("drawskeleton")) {
                     Config.DRAW_SKELETON = !Config.DRAW_SKELETON;
                 }
+                else if (input[1].equalsIgnoreCase("drawtree")) {
+                    Config.DRAW_TREE = !Config.DRAW_TREE;
+                }
                 else System.out.println("Error: Unrecognized function: \"" + input[1] + "\"");
             }
             else System.out.println("Error: No function specified!");

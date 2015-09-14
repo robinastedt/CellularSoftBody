@@ -1,3 +1,8 @@
+###0.3.6 [2015-09-14]
+* Added debug function "drawtree" that visualizes the tree data structure.
+* Console doesn't store the last command to previous commands if the last command was the same.
+* Implemented KD-tree data structure, replacing the quadtree, further improving performance.
+
 ###0.3.5 [2015-09-13]
 * Implemented a quadtree data structure for collision detection, greatly improving performance, especially for larger number of cells.
 * Added more variables available with the get command in the console: "treebuildtime" and "cellrequests"

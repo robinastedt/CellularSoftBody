@@ -31,6 +31,7 @@ public class Config {
     public static final boolean DEBUG = true;
     public static boolean DRAW_BORDER = true;
     public static boolean DRAW_SKELETON = false;
+    public static boolean DRAW_TREE = false;
     public static final double DEBUG_SHAKE_SPEED = 0.25;
     public static final double TEMP_SPEED = 0.01;
     
@@ -44,7 +45,7 @@ public class Config {
                             + "  ############################################\n"
                             + "  ##                                        ##\n"
                             + "  ##         [ CELLULAR SOFT BODY ]         ##\n"
-                            + "  ##             Version: 0.3.5             ##\n"
+                            + "  ##             Version: 0.3.6             ##\n"
                             + "  ##          Author: Robin Åstedt          ##\n"
                             + "  ##        http://robin.astedt.com         ##\n"
                             + "  ##           Copyright \u00a9 2015             ##\n"
@@ -65,10 +66,10 @@ public class Config {
             + "                         : tps: Ticks per second\n"
             + "                         : cellcount: amount of cells in environment\n"
             + "                         : cellrequests: amount of cells that all cells iterate over per\n"
-            + "                           tick as well as the maximum amount possible in an n-body system.";
+            + "                           tick as well as the maximum amount possible in an n-body system";
     public static final String CONSOLE_HELP_2
             = "                         : treebuildtime: amount of nano seconds it took to build the\n"
-            + "                           quadtree this tick as well as total elapsed nanoseconds this tick.\n"
+            + "                           quadtree this tick as well as total elapsed nanoseconds this tick\n"
             + "\n"
             + "set <variable> <value>   : Sets the variable to the specified value\n"
             + "                         : fps: Frames per second. Range: [10-200]\n"
@@ -76,7 +77,8 @@ public class Config {
             + "debug <function>         : Executes debug functions\n"
             + "                         : shake: sets all cells speeds to a random value\n"
             + "                         : drawborder: toggles drawing of cell border\n"
-            + "                         : drawskeleton: toggles drawing of cell skeleton";
+            + "                         : drawskeleton: toggles drawing of cell skeleton\n"
+            + "                         : drawtree: toggles drawing of quad tree";
     
     
             

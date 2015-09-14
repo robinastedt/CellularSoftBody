@@ -7,14 +7,14 @@ import com.astedt.robin.cellularsoftbody.render.DrawingComponent;
 import com.astedt.robin.cellularsoftbody.physics.Physics;
 import com.astedt.robin.cellularsoftbody.world.genetics.Chromosome;
 import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
-import com.astedt.robin.quadtree.Node;
-import com.astedt.robin.quadtree.QuadTreeObject;
+import com.astedt.robin.kdtree.KDNode;
+import com.astedt.robin.kdtree.KDObject;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
 
-public class Cell implements QuadTreeObject
+public class Cell implements KDObject
 {
     public double x, y;
     public double xv, yv;
@@ -37,7 +37,8 @@ public class Cell implements QuadTreeObject
     private int pleasureCounter;
     public boolean seperate;
     
-    private Node node;
+    //private Node node;
+    private KDNode node;
     
     public int gen;
 
@@ -147,22 +148,7 @@ public class Cell implements QuadTreeObject
                 }
             }
             
-            /*
-            if (parent.n[(bp + 1) % 6] != null) {
-                Cell c = parent.n[(bp + 1) % 6];
-                c.n[(bp + 5) % 6] = this;
-                n[(bp + 2) % 6] = c;
-                c.neighbours++;
-                neighbours++;
-            }
-            if (parent.n[(bp + 5) % 6] != null) {
-                Cell c = parent.n[(bp + 5) % 6];
-                c.n[(bp + 1) % 6] = this;
-                n[(bp + 4) % 6] = c;
-                c.neighbours++;
-                neighbours++;
-            }
-            */
+            
 
         } 
         
@@ -226,7 +212,7 @@ public class Cell implements QuadTreeObject
         }
 
 
-        for (QuadTreeObject qtObject : node.getObjects()) {
+        for (KDObject qtObject : node.getObjects()) {
             Cell c = (Cell)qtObject;
             if (c != this)
             {
@@ -458,24 +444,24 @@ public class Cell implements QuadTreeObject
             
         }
     }
-
-    @Override
-    public double getX() {
-        return x;
-    }
-
-    @Override
-    public double getY() {
-        return y;
-    }
-
-    @Override
-    public void setNode(Node node) {
-        this.node = node;
-    }
     
-    public Node getNode() {
+    public KDNode getNode() {
         return node;
+    }
+    @Override
+    public double getCoord(int d) {
+        switch (d) {
+            default:
+            case 0:
+                return x;
+            case 1:
+                return y;
+        }
+    }
+
+    @Override
+    public void setNode(KDNode node) {
+        this.node = node;
     }
 
 }

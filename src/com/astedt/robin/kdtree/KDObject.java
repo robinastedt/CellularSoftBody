@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.astedt.robin.quadtree;
+package com.astedt.robin.kdtree;
 
 /**
  *
  * @author Robin
  */
-public interface QuadTreeObject {
-    public double getX();
-    public double getY();
+public interface KDObject {
+    public double getCoord(int d);
     
-    public void setNode(Node node);
+    public void setNode(KDNode node);
 }
