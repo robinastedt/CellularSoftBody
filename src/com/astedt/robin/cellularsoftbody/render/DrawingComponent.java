@@ -27,7 +27,7 @@ public class DrawingComponent extends JComponent{
     public void paintComponent(Graphics g) {
         if (Physics.initialized) {
             Graphics2D g2 = (Graphics2D) g;
-
+            
             g2.setFont(fontMain);
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, Config.WIDTH, Config.HEIGHT);
@@ -37,13 +37,18 @@ public class DrawingComponent extends JComponent{
                 if (Config.DRAW_TREE) Physics.tree.draw(g2);
                 
                 //Draw cells: Layer 0
-                for (Cell c : Physics.cells) {
-                    c.Draw(g2, 0);
+                if (Config.DRAW_SKELETON) {
+                    for (Cell c : Physics.cells) {
+                        c.Draw(g2, 0);
+                    }
                 }
-
+                
+                
                 //Draw cells: Layer 1
-                for (Cell c : Physics.cells) {
-                    c.Draw(g2, 1);
+                if (Config.DRAW_BORDER) {
+                    for (Cell c : Physics.cells) {
+                        c.Draw(g2, 1);
+                    }
                 }
             }
             

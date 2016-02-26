@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.astedt.robin.kdtree;
 
 import java.awt.Graphics2D;
@@ -24,7 +20,7 @@ public class KDNode {
     public void draw(Graphics2D g) {
         if (fstNode != null) fstNode.draw(g);
         if (sndNode != null) sndNode.draw(g);
-        g.drawRect((int)bounds[0][0], (int)bounds[1][0], (int)(bounds[0][1] - bounds[0][0]), (int)(bounds[1][1] - bounds[1][0]));
+        if (fstNode == null || sndNode == null) g.drawRect((int)bounds[0][0], (int)bounds[1][0], (int)(bounds[0][1] - bounds[0][0]), (int)(bounds[1][1] - bounds[1][0]));
     }
     
     public List<KDObject> getObjects() {
@@ -45,7 +41,7 @@ public class KDNode {
         else {
             double[][] boundsFst = new double[k][2];
             double[][] boundsSnd = new double[k][2];
-
+            
             double threshold = bounds[d][0] + (bounds[d][1] - bounds[d][0]) / 2;
 
             for (int i = 0; i < k; i++) {
@@ -60,10 +56,11 @@ public class KDNode {
                     boundsSnd[i] = bounds[i];
                 }
             }
-
+            
             List<KDObject> objFst = null, 
                            objSnd = null;
-
+            
+            
             for (KDObject obj : objects) {
                 if (obj.getCoord(d) < threshold - objectRadius) {
                     if (objFst == null) objFst = new ArrayList<>();
@@ -78,7 +75,7 @@ public class KDNode {
                 }
 
             }
-
+            
             if (objFst != null) {
                 fstNode = new KDNode(objFst, boundsFst, (d + 1) % k, objectRadius);
             }

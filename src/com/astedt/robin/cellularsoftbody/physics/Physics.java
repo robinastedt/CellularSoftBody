@@ -2,7 +2,7 @@ package com.astedt.robin.cellularsoftbody.physics;
 
 import com.astedt.robin.cellularsoftbody.world.organisms.Cell;
 import com.astedt.robin.cellularsoftbody.Config;
-import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
+import com.astedt.robin.cellularsoftbody.world.genetics.Genome;
 import com.astedt.robin.cellularsoftbody.Main;
 import com.astedt.robin.kdtree.KDObject;
 import com.astedt.robin.kdtree.KDTree;
@@ -22,6 +22,8 @@ public class Physics implements Runnable {
     public static long treeBuildTime;
     public static long cellRequests;
     
+    private static List<PhysicsJob> physicsJobs;
+    
     public Physics() {
         initialized = false;
     }
@@ -32,7 +34,6 @@ public class Physics implements Runnable {
         init();
         while (Main.running) {
             tick();
-            //for (int i = 0; i < (100000); i++) Math.sqrt(Math.random());
             Main.benchmarkTickCount++;
         }
     }
@@ -40,27 +41,29 @@ public class Physics implements Runnable {
     
     //Run once
     void init() {
-        cells = new ArrayList<Cell>();
-        cellsToRemove = new ArrayList<Cell>();
+        cells = new ArrayList<>();
+        cellsToRemove = new ArrayList<>();
         cellsToGrow = new ArrayList<>();
+        physicsJobs = new ArrayList<>();
         
-        int n1 = 8;
-        int n2 = 6;
+        int n1 = Config.TEMP_INIT_CELL_SPAWN_WIDTH;
+        int n2 = Config.TEMP_INIT_CELL_SPAWN_HEIGHT;
         
         for (int x = 0; x < n1; x++) {
             for (int y = 0; y < n2; y++) {
-                Cell c = new Cell((x + 1) * Config.WIDTH / (n1+1), (y + 1) * Config.HEIGHT / (n2+1), new Dna(), 0, null, false, 0);
+                Cell c = new Cell((x + 1) * Config.WIDTH / (n1+1), (y + 1) * Config.HEIGHT / (n2+1), new Genome(), 0, null, 0);
+                cells.add(c);
             }
         }
         
-        
+        System.out.println("Loading complete... " + (System.nanoTime() - Main.loadingStartTime) / 1000000000.0 + " s");
         initialized = true;
     }
     
     
     
     //Runs once per tick
-    synchronized void tick() {
+    void tick() {
         
         long startTimeTree = System.nanoTime();
         List<KDObject> kdtreeObjects = new ArrayList<>();
@@ -73,52 +76,25 @@ public class Physics implements Runnable {
         treeBuildTime = System.nanoTime() - startTimeTree;
         long cellRequestCounter = 0;
         
+        
         for (Cell cell : cells)
         {
-            cell.PreTick();
+            cell.preTick();
+            fetchJobs(cell);
         }
+        
         for (Cell cell : cells)
         {
-            cell.Tick();
+            cell.tick();
+            fetchJobs(cell);
             cellRequestCounter += cell.getNode().getObjects().size();
         }
+        
+        
+        handleJobs(physicsJobs);
+        
         cellRequests = cellRequestCounter;
-        
-        if (cellsToGrow.size() > 0 || cellsToRemove.size() > 0) {
-            synchronized (Main.monitor) 
-            {
-                if (cellsToGrow.size() > 0) {
-                    for (Cell cell : cellsToGrow) {
-                        cell.grow();
-                    }
-                    cellsToGrow.clear();
-                }
 
-                if (cellsToRemove.size() > 0)
-                {
-                    for (Cell cell : cellsToRemove)
-                    {
-                        for (int i = 0; i < 6; i++)
-                        {
-                            if (cell.n[i] != null)
-                            {
-                                int ne = (i + 3) % 6; //opposite neighbour
-                                if (cell.n[i].n[ne] != null)
-                                {
-                                    cell.n[i].n[ne] = null;
-                                    cell.n[i].neighbours--;
-                                }
-                                cell.n[i] = null;
-                            }
-                        }
-                        cell.neighbours = 0;
-                    }
-                    cellsToRemove.clear();
-                }
-            }
-        }
-        
-        
     }
     
     public static void shakeEm() {
@@ -126,5 +102,54 @@ public class Physics implements Runnable {
             c.xv = Config.DEBUG_SHAKE_SPEED * (Math.random() * 2 - 1);
             c.yv = Config.DEBUG_SHAKE_SPEED * (Math.random() * 2 - 1);
         }
+    }
+    
+    private static void fetchJobs(Cell cell) {
+        List<PhysicsJob> jobs = cell.getPhysicsJobs();
+        if (jobs.isEmpty()) return;
+        else {
+            physicsJobs.addAll(jobs);
+            jobs.clear();
+        }
+    }
+    
+    private static void handleJobs(List<PhysicsJob> jobs) {
+        for (PhysicsJob job : jobs) {
+            switch (job.type) {
+                case CELL_GROW:
+                synchronized (Main.monitor) {
+                    job.cells[0].grow();
+                }
+                break;
+                case CONNECTION_BREAK:
+                {
+                    Cell c1 = job.cells[0];
+                    Cell c2 = job.cells[1];
+                    int i = 0;
+                    for (; i < 6; i++) {
+                        if (c1.n[i] == c2) {
+                            c1.n[i] = null;
+                            c1.neighbours--;
+                            int j = (i + 3) % 6;
+                            c2.n[j] = null;
+                            c2.neighbours--;
+                            break;
+                        }
+                    }
+                }
+                break;
+                case CELL_DESTROY:
+                synchronized (Main.monitor) {
+                    Cell cell = job.cells[0];
+                    for (int i = 0; i < 6; i++) {
+                        cell.n[i].n[(i+3)%6] = null;
+                    }
+                    cells.remove(cell);
+                }
+                break;
+                default: break;
+            }
+        }
+        jobs.clear();
     }
 }

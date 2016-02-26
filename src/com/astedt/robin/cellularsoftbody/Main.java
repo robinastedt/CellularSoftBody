@@ -8,8 +8,6 @@ import com.astedt.robin.cellularsoftbody.render.BenchmarkFrameTimerListener;
 import com.astedt.robin.cellularsoftbody.render.UpdateFrameListener;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +18,7 @@ public class Main {
 
     public static int fps;
     public static int tps;
+    public static long loadingStartTime;
     public static int benchmarkFrameCount;
     public static int benchmarkTickCount;
     private static Timer benchmarkFrameTimer;
@@ -30,25 +29,66 @@ public class Main {
     public static Console console;
     public static boolean running;
     
+    public static boolean waitingForSeedInput;
+    public static String seedString;
+    public static long seed;
     public static Random rand;
     
     private static Thread threadPhysics;
-    public static Object monitor;
+    public static final Object monitor = new Object();
+    
     
     public static void main(String[] args) {
+
         
         //App running
         running = true;
         
         //Start console
         console = new Console();
-        //System.out.println(Config.WELCOME_MESSAGE);
         
         //Inititate RNG
-        rand = new Random();
+        waitingForSeedInput = true;
+        if (args.length > 0) {
+            seedString = args[0];
+            seed = seedString.hashCode();
+        }
+        else {
+            System.out.println("Enter seed: ");
+            seedString = "";
+            //Request focus for console
+            console.frame.requestFocus();
+            console.textField.requestFocusInWindow();
+            
+            //Wait for input
+            while (waitingForSeedInput) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if (seedString.isEmpty()) {
+                seed = new Random().nextLong();
+            }
+            else {
+                seed = seedString.hashCode();
+            }
+        }
+        if (seedString.isEmpty()) {
+            System.out.println("Initializing with seed: " + seed + " (random, none selected)");
+        }
+        else {
+            System.out.println("Initializing with seed: " + seed + " (\"" + seedString + "\")");
+        }
+        rand = new Random(seed);
         
-        //Initiate thread sync object
-        monitor = new Object();
+        //Benchmark loading time
+        loadingStartTime = System.nanoTime();
+        
+        
+        
         
         //Start physics thread
         threadPhysics = new Thread(new Physics());
@@ -71,9 +111,6 @@ public class Main {
         window.pack(); //Without calling it twice it sometimes creates a window to large... >_>
         window.setVisible(true);
         
-        //Request focus for console
-        console.frame.requestFocus();
-        console.textField.requestFocusInWindow();
         
         //Start frame updating timer
         updateFrameTimer = new Timer(1000 / Config.FPS_MAX, new UpdateFrameListener());
@@ -94,10 +131,23 @@ public class Main {
         ////////////////////
         //Main thread done//
         ////////////////////
+        
     }
     
     //Called from Console.java when input received
     public static void ConsoleInput(String[] input) {
+        
+        if (waitingForSeedInput) {
+            if (input.length > 0) {
+                seedString = input[0];
+                for (int i = 1; i < input.length; i++) {
+                    seedString += input[i];
+                }
+            }
+            else seedString = "";
+            waitingForSeedInput = false;
+            return;
+        }
         
         if (input[0].equalsIgnoreCase("exit")) {
             System.out.println("Closing application...");

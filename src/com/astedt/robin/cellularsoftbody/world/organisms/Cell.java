@@ -5,43 +5,47 @@ import com.astedt.robin.cellularsoftbody.Config;
 import com.astedt.robin.cellularsoftbody.Main;
 import com.astedt.robin.cellularsoftbody.render.DrawingComponent;
 import com.astedt.robin.cellularsoftbody.physics.Physics;
-import com.astedt.robin.cellularsoftbody.world.genetics.Chromosome;
-import com.astedt.robin.cellularsoftbody.world.genetics.Dna;
+import com.astedt.robin.cellularsoftbody.physics.PhysicsJob;
+import com.astedt.robin.cellularsoftbody.physics.PhysicsJob.JobType;
+import com.astedt.robin.cellularsoftbody.world.genetics.CellGene;
+import com.astedt.robin.cellularsoftbody.world.genetics.Genome;
 import com.astedt.robin.kdtree.KDNode;
 import com.astedt.robin.kdtree.KDObject;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Cell implements KDObject
 {
+
     public double x, y;
     public double xv, yv;
-    double uvectx;
-    double uvecty;
+    private double uvectx;
+    private double uvecty;
     public double dir;
     public double dirv;
     public double maxSize;
     public double size;
     public double radius;
-    public Dna dna;
-    public int chromosomeIndex;
+    public Genome genome;
+    public int cellGeneIndex;
     public Cell parent;
+    public int parentBindPoint;
     private boolean grown;
-    public int ox, oy;
     public int neighbours;
-    public int surfaceArea;
     public Cell[] n;
     private int painCounter;
     private int pleasureCounter;
-    public boolean seperate;
+    public Color color;
+    public int gen;
     
-    //private Node node;
     private KDNode node;
     
-    public int gen;
-
+    private List<PhysicsJob> physicsJobs;
+    
     private static final double PI = Math.PI;
     private static final double PIhalf = Math.PI / 2;
     private static final double PIquarter = Math.PI / 4;
@@ -51,48 +55,25 @@ public class Cell implements KDObject
     private static final double PIdouble = Math.PI * 2;
     private static final double PIsixth = Math.PI / 6;
     
-    public Color color;
     
-    private double translationFrictionMultiplier;
-    private double rotationFrictionMultiplier;
-
-    /*
-    public Cell(double x, double y, double size)
-    {
+    
+    public Cell(double x, double y, Genome genome, int cellGeneIndex, Cell parent, int parentBindPoint) {
+        physicsJobs = new ArrayList<>();
+        
+        this.genome = genome;
+        this.cellGeneIndex = cellGeneIndex;
+        this.parent = parent;
+        this.parentBindPoint = parentBindPoint;
         this.x = x;
         this.y = y;
         xv = 0;
         yv = 0;
         uvectx = 0.0;
         uvecty = 0.0;
-        dir = Math.random() * PIdouble - PI;
-        dirv = 0.0;
-        maxSize = size;
-        this.size = maxSize * Config.CELL_INIT_SIZE;
-        radius = this.size / 2;
-        initialized = false;
-        seperate = false;
-        painCounter = 0;
-        pleasureCounter = 0;
-        n = new Cell[6];
-        neighbours = 0;
-        Physics.cells.add(this);
-    }
-    */
-    public Cell(double x, double y, Dna dna, int chromosomeIndex, Cell parent, boolean bind, int parentBindPoint) {
-        this.dna = dna;
-        this.chromosomeIndex = chromosomeIndex;
-        this.parent = parent;
-        this.x = x;
-        this.y = y;
-        xv = 0;
-        yv = 0;
-        uvectx = 0.0;
-        dir = Math.random() * PIdouble - PI;
+        dir = Main.rand.nextDouble() * PIdouble - PI;
         dirv = 0.0;
         maxSize = Config.CELL_MAX_SIZE;
         size = maxSize * Config.CELL_INIT_SIZE;
-        seperate = false;
         painCounter = 0;
         pleasureCounter = 0;
         n = new Cell[6];
@@ -108,77 +89,84 @@ public class Cell implements KDObject
         if (parent == null) gen = 0;
         else gen = parent.gen + 1;
         
-        if (bind) {
-            int bp = parentBindPoint;
-            parent.n[bp] = this;
-            parent.neighbours++;
-            int bpToParent = (bp + 3) % 6;
-            n[bpToParent] = parent;
-            neighbours++;
-            
-            
-            // Here be dragons
-            // Start from the parent and work around alternating ccw and cw.
-            // Ask each neighbour if the got neighbours the cell can bind to.
-            final int[] neighbourIndexArray = {0, 1, -1, 2, -2, 3};
-            for (int i = 0; i < 6; i++) {
-                int ni = 6 + neighbourIndexArray[i] + bpToParent;
-                
-                if (n[ni % 6] != null) {
-                    Cell cn = n[ni % 6];
-                    int nbp = (ni + 3) % 6;
-                    if (cn.n[(nbp + 1) % 6] != null) {
-                        Cell cnn = cn.n[(nbp + 1) % 6];
-                        if (cnn.n[(nbp + 5) % 6] == null) {
-                            cnn.n[(nbp + 5) % 6] = this;
-                            cnn.neighbours++;
-                            n[(nbp + 2) % 6] = cnn;
-                            neighbours++;
-                        }
-                    }
-                    if (cn.n[(nbp + 5) % 6] != null) {
-                        Cell cnn = cn.n[(nbp + 5) % 6];
-                        if (cnn.n[(nbp + 1) % 6] == null) {
-                            cnn.n[(nbp + 1) % 6] = this;
-                            cnn.neighbours++;
-                            n[(nbp + 4) % 6] = cnn;
-                            neighbours++;
-                        }
-                    }
-                }
-            }
-            
-            
-
-        } 
-        
-        
-        
-        surfaceArea = 6;
-        translationFrictionMultiplier = 1.0 - (Config.FRICTION_TRANSLATION * (surfaceArea + 6) / 6);
-        rotationFrictionMultiplier = 1.0 - Config.FRICTION_ROTATION;
-        
-        Physics.cells.add(this);
     }
     
-    
-    public Cell[] grow() {
-        if (!grown) {
-            Cell[] children = new Cell[6];
-            Chromosome chromosome = dna.getChromosome(chromosomeIndex);
-            for (int i = 0; i < 6; i++) {
-                if (n[i] == null && chromosome.growthIndex[i] > 0 && chromosome.growthIndex[i] + chromosomeIndex < dna.chromosomeCount()) {
-                    Cell cell = new Cell(x + Math.cos(Math.PI + dir + i * Math.PI / 3) * size * (1 + Config.CELL_INIT_SIZE) / 2, y + Math.sin(Math.PI + dir + i * Math.PI / 3) * size * (1 + Config.CELL_INIT_SIZE) / 2, dna, chromosome.growthIndex[i] + chromosomeIndex, this, true, i);
-                    children[i] = cell;
+    public void bind() {
+        int bp = parentBindPoint;
+        parent.n[bp] = this;
+        parent.neighbours++;
+        int bpToParent = (bp + 3) % 6;
+        n[bpToParent] = parent;
+        neighbours++;
+
+
+        // Here be dragons
+        // Start from the parent and work around alternating ccw and cw.
+        // Ask each neighbour if the got neighbours the cell can bind to.
+        final int[] neighbourIndexArray = {0, 1, -1, 2, -2, 3};
+        for (int i = 0; i < 6; i++) {
+            int ni = 6 + neighbourIndexArray[i] + bpToParent;
+
+            if (n[ni % 6] != null) {
+                Cell cn = n[ni % 6];
+                int nbp = (ni + 3) % 6;
+                if (cn.n[(nbp + 1) % 6] != null) {
+                    Cell cnn = cn.n[(nbp + 1) % 6];
+                    if (cnn.n[(nbp + 5) % 6] == null) {
+                        cnn.n[(nbp + 5) % 6] = this;
+                        cnn.neighbours++;
+                        n[(nbp + 2) % 6] = cnn;
+                        neighbours++;
+                    }
+                }
+                if (cn.n[(nbp + 5) % 6] != null) {
+                    Cell cnn = cn.n[(nbp + 5) % 6];
+                    if (cnn.n[(nbp + 1) % 6] == null) {
+                        cnn.n[(nbp + 1) % 6] = this;
+                        cnn.neighbours++;
+                        n[(nbp + 4) % 6] = cnn;
+                        neighbours++;
+                    }
                 }
             }
-            grown = true;
-            return children;
         }
-        return null;
+    }
+    
+    public List<PhysicsJob> getPhysicsJobs() {
+        return physicsJobs;
+    }
+    
+    //Concurrently unsafe, only to be call as a PhysicsJob
+    public void grow() {
+        if (!grown) {
+            CellGene cellGene = genome.getCellGene(cellGeneIndex);
+            
+            for (int i = 0; i < 6; i++) {
+                if (n[i] == null && 
+                        cellGene.growthIndex[i] > 0 && 
+                        cellGene.growthIndex[i] + cellGeneIndex < genome.cellGeneCount())
+                {
+                    
+                    
+                    Cell cell = new Cell(
+                            x + Math.cos(Math.PI + dir + i * Math.PI / 3) * size * (1 + Config.CELL_INIT_SIZE) / 2, 
+                            y + Math.sin(Math.PI + dir + i * Math.PI / 3) * size * (1 + Config.CELL_INIT_SIZE) / 2, 
+                            genome, 
+                            cellGene.growthIndex[i] + cellGeneIndex, 
+                            this,
+                            i);
+                    cell.bind();
+                    Physics.cells.add(cell);
+                    
+                }
+            }
+            
+            grown = true;
+            
+        }
     }
 
-    public void PreTick()
+    public void preTick()
     {
         double xforce = 0.0;
         double yforce= 0.0;
@@ -194,20 +182,19 @@ public class Cell implements KDObject
                 double d = DistanceTo(c);
                 if (d > size + c.size)
                 {
-                    //c.n[(i + 3) % 6] = null;
-                    //c.neighbours--;
-                    //n[i] = null;
-                    //neighbours--;
-                    //seperate = true;
+                    physicsJobs.add(new PhysicsJob(JobType.CONNECTION_BREAK, new Cell[] {this, c}));
                 }
-                double force = d - (size + c.size) / 2;
-                double dx = c.x - x;
-                double dy = c.y - y;
-                xforce += dx / d * force;
-                yforce += dy / d * force;
-                double a = Math.atan2(dy, dx) + PI - PIthird * i;
-                uvectx += Math.cos(a);
-                uvecty += Math.sin(a);
+                else {
+                    double force = d - (size + c.size) / 2;
+                    double dx = c.x - x;
+                    double dy = c.y - y;
+                    xforce += dx / d * force;
+                    yforce += dy / d * force;
+                    double a = Math.atan2(dy, dx) + PI - PIthird * i;
+                    uvectx += Math.cos(a);
+                    uvecty += Math.sin(a);
+                }
+                
             }
         }
 
@@ -247,16 +234,7 @@ public class Cell implements KDObject
             }
         }
 
-        if (neighbours > 0)
-        {
-            dir = Math.atan2(uvecty, uvectx);
-            dirv = 0.0;
-        }
-        else
-        {
-            dir += dirv;
-            dirv *= rotationFrictionMultiplier; // = 1.0 - Config.FRICTION_ROTATION
-        }
+        
 
 
         double xa = xforce * Config.FORCE_TRANSLATION;
@@ -270,35 +248,27 @@ public class Cell implements KDObject
         xv += xa;
         yv += ya;
         
-        xv *= translationFrictionMultiplier; // = 1.0 - (Config.FRICTION_TRANSLATION * (surfaceArea + 6) / 6);
-        yv *= translationFrictionMultiplier;
+        xv *= 1.0 - Config.FRICTION_TRANSLATION; //translationFrictionMultiplier; // = 1.0 - (Config.FRICTION_TRANSLATION * (surfaceArea + 6) / 6);
+        yv *= 1.0 - Config.FRICTION_TRANSLATION; //translationFrictionMultiplier;
         
         if (x < size / 2) xv = Math.abs(xv) + 0.0001;
         else if (x >= Config.WIDTH - size / 2) xv = -Math.abs(xv) - 0.0001;
         if (y < size / 2) yv = Math.abs(yv) + 0.0001;
         else if (y >= Config.HEIGHT - size / 2) yv = -Math.abs(yv) - 0.0001;
-
-        if (seperate)
-        {
-            seperate = false;
-            Physics.cellsToRemove.add(this);
-            TriggerPain();
-            for (int i = 0; i < 6; i++)
-            {
-                if (n[i] != null) n[i].TriggerPain();
-            }
-        }
-
+        
+        
     }
-
-    public void Tick()
+    
+    public void tick()
     {
         if (size < maxSize)
         {
             size += maxSize * Config.CELL_GROWTH_RATE;
             radius = size / 2;
         }
-        else if (!grown) Physics.cellsToGrow.add(this);
+        else if (!grown) {
+            physicsJobs.add(new PhysicsJob(JobType.CELL_GROW, new Cell[] {this}));
+        }
         
         if (painCounter > 0)
         {
@@ -314,6 +284,7 @@ public class Cell implements KDObject
                 }
             }
         }
+        
         if (pleasureCounter > 0)
         {
             pleasureCounter--;
@@ -330,16 +301,28 @@ public class Cell implements KDObject
         }
 
         if (pleasureCounter > 0) pleasureCounter--;
+        
+        if (neighbours > 0)
+        {
+            dir = Math.atan2(uvecty, uvectx);
+            dirv = 0.0;
+        }
+        else
+        {
+            dir += dirv;
+            dirv *= 1.0 - Config.FRICTION_ROTATION;
+        }
 
         x += xv;
         y += yv;
     }
+    
 
     public void Draw(Graphics2D g, int layer)
     {
         double r2 = radius / 2;
 
-        if (layer == 0 && Config.DRAW_SKELETON)
+        if (layer == 0)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -347,7 +330,7 @@ public class Cell implements KDObject
                 if (n[i] != null) g.drawLine((int)x, (int)y, (int)n[i].x, (int)n[i].y);
             }
         }
-        else if (layer == 1 && Config.DRAW_BORDER)
+        else if (layer == 1)
         {
             
             Point[] points = new Point[6];
@@ -441,13 +424,13 @@ public class Cell implements KDObject
         if (pleasureCounter == 0)
         {
             pleasureCounter = Config.CELL_PLEASURE_DURATION;
-            
         }
     }
     
     public KDNode getNode() {
         return node;
     }
+    
     @Override
     public double getCoord(int d) {
         switch (d) {
