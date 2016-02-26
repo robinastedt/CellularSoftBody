@@ -1,4 +1,4 @@
-##0.3.7 [not released]
+##0.3.7 [2016-02-26]
 * Cleaned unused code, re-enabled various temporarily disabled features such as cell binding tearing.
 * Fixed various small bugs
 * Renamed classes and variables dealing with genetics to better describe what they represent, as well as prepare for further expansion.
