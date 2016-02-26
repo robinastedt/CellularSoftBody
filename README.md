@@ -1,3 +1,13 @@
+##0.3.7 [not released]
+* Cleaned unused code, re-enabled various temporarily disabled features such as cell binding tearing.
+* Fixed various small bugs
+* Renamed classes and variables dealing with genetics to better describe what they represent, as well as prepare for further expansion.
+* Implemented more gene types in preparation for phenotypes.
+* Added the ability to enter a seed string either when the application starts or as an argument.
+* Cleaned up any RNG uses that doesn't use the main seed making the whole application determinstic for a specific seed so that you can recreate any simulation outcome you like.
+* Added PhysicsJob object so that all cells can save instructions that the physics engine needs to deal with in between physics steps, one step on the way as to make the iteration of objects safe for multiple physics threads.
+* Note: Cell object needs serious clean up. Especially the constuctor.
+
 ###0.3.6 [2015-09-14]
 * Added debug function "drawtree" that visualizes the tree data structure.
 * Console doesn't store the last command to previous commands if the last command was the same.
