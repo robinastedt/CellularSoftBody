@@ -1,8 +1,10 @@
-package com.astedt.robin.cellularsoftbody
+package com.astedt.robin.cellularsoftbody;
+
+import com.astedt.robin.cellularsoftbody.controller.Controller;
 
 object Program {
   def main(args : Array[String]) {
-    println("Hello world!");
-    println("Hello again");
+    val controller = new Controller();
+    controller.run();
   }
 }
