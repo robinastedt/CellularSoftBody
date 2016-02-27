@@ -1,4 +1,4 @@
-package com.astedt.robin.cellularsoftbody.model
+package com.astedt.robin.cellularsoftbody.model.data
 
 class Acceleration(var x : Double, var y : Double);
 
