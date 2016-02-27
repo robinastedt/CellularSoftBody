@@ -1,18 +1,13 @@
 package com.astedt.robin.cellularsoftbody;
 package model.data;
 
-class Acceleration(var x : Double, var y : Double);
-
-class Velocity(var x : Double, var y : Double) {
-  def +=(acc : Acceleration, dt : Double) {
-    x += acc.x * dt;
-    y += acc.y * dt;
+class Vector2(var x : Double, var y : Double) {
+  def +=(other : Vector2, dt : Double) {
+    x += other.x * dt
+    y += other.y * dt
   }
 }
 
-class Position(var x : Double, var y : Double) {
-  def +=(vel : Velocity, dt : Double) {
-    x += vel.x * dt;
-    y += vel.y * dt;
-  }
-}
+type Position = Vector2
+type Velocity = Vector2
+type Acceleration = Vector2
