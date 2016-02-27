@@ -1,6 +1,6 @@
 package com.astedt.robin.cellularsoftbody;
 
-import com.astedt.robin.cellularsoftbody.controller.Controller;
+import controller.Controller;
 
 object Program {
   def main(args : Array[String]) {

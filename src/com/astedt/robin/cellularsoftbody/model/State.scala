@@ -1,7 +1,8 @@
+package com.astedt.robin.cellularsoftbody;
+package model;
 
-package com.astedt.robin.cellularsoftbody.model
-import com.astedt.robin.cellularsoftbody.model.cells.Cell
-import com.astedt.robin.cellularsoftbody.model.environment.Environment;
+import cells.Cell
+import environment.Environment;
 
 class State {
   val environment = new Environment();

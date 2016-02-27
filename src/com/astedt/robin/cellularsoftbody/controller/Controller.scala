@@ -1,6 +1,7 @@
-package com.astedt.robin.cellularsoftbody.controller
+package com.astedt.robin.cellularsoftbody;
+package controller;
 
-import com.astedt.robin.cellularsoftbody.model.State;
+import model.State;
 
 class Controller {
   var state : State = new State();

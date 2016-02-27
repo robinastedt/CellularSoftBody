@@ -1,5 +1,4 @@
-package com.astedt.robin.cellularsoftbody.model.cells.phenotypes
+package com.astedt.robin.cellularsoftbody;
+package model.cells.phenotypes;
 
-trait Photosynthesis {
-  
-}
+trait Photosynthesis;

@@ -1,5 +1,4 @@
-package com.astedt.robin.cellularsoftbody.model.environment
+package com.astedt.robin.cellularsoftbody;
+package model.environment;
 
-class Environment {
-  
-}
+class Environment;

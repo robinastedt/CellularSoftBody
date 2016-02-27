@@ -1,7 +1,8 @@
-package com.astedt.robin.cellularsoftbody.model.cells
+package com.astedt.robin.cellularsoftbody;
+package model.cells;
 
-import com.astedt.robin.cellularsoftbody.model.cells.phenotypes.Photosynthesis;
-import com.astedt.robin.cellularsoftbody.model.data._;
+import phenotypes.Photosynthesis;
+import model.data._;
 
 
 object Cell {
