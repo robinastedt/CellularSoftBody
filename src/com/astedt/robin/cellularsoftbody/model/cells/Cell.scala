@@ -5,7 +5,7 @@ import com.astedt.robin.cellularsoftbody.model.cells.phenotypes.Photosynthesis;
 class Velocity(var x : Double, var y : Double);
 
 class Position(var x : Double, var y : Double) {
-  def incr(vel : Velocity) {
+  def incr(vel : Velocity, dt : Double) {
     x += vel.x;
     y += vel.y;
   }
@@ -20,6 +20,6 @@ class Cell(private var position : Position) {
   private var velocity = new Velocity(0,0);
   
   def step(dt : Double) {
-    position.incr(velocity);
+    position.incr(velocity, dt);
   }
 }
