@@ -1,6 +1,7 @@
 package com.astedt.robin.cellularsoftbody;
 package model.data;
 
+
 object Force {
   def none = new Force(0,0);
 }
