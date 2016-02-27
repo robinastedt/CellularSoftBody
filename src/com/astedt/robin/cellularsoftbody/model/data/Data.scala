@@ -11,3 +11,4 @@ class Vector2(var x : Double, var y : Double) {
 type Position = Vector2
 type Velocity = Vector2
 type Acceleration = Vector2
+type Force = Vector2
