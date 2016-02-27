@@ -1,7 +1,8 @@
 package com.astedt.robin.cellularsoftbody;
 package model.cells;
 
-import phenotypes.Photosynthesis;
+import phenotypes._;
+
 import model.data._;
 
 
@@ -10,8 +11,8 @@ object Cell {
 }
 
 class Cell(private var position : Position) {
-  private var velocity = new Velocity(0,0);
-  private var acceleration = new Acceleration(0,0);
+  private var velocity = Velocity.none;
+  private var acceleration = Acceleration.none;
   
   def step(dt : Double) {
     velocity += (acceleration, dt);
