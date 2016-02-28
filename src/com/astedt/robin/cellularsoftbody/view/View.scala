@@ -8,8 +8,12 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
-class View extends JFXApp {
-  println("View initialized");
+class View extends Runnable with JFXApp {
+  println("View initialized and started!");
+  
+  def run() {
+    this.main(Array.empty);
+  }
   
   stage = new JFXApp.PrimaryStage {
     title.value = "Hello Stage"
@@ -26,4 +30,6 @@ class View extends JFXApp {
       }
     }
   }
+  
+  
 }
