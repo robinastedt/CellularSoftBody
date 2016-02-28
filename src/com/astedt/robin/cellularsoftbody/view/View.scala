@@ -1,6 +1,7 @@
 package com.astedt.robin.cellularsoftbody;
 package view;
 
+import model.State;
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -8,7 +9,7 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
-class View extends Runnable with JFXApp {
+class View(private val model : State, private val observer : ViewObserver) extends Runnable with JFXApp {
   println("View initialized and started!");
   
   def run() {
@@ -31,5 +32,6 @@ class View extends Runnable with JFXApp {
     }
   }
   
-  
+  //Testing
+  observer.handleInput(new InputEvent());
 }
