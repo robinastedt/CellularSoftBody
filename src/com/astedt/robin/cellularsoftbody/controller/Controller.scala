@@ -29,16 +29,15 @@ class Controller extends Observer with Runnable {
    * Step function, called repeatedly as long as thread is alive
    */
   def step() {
-    
+    state.test = if (state.test == 0) 1 else 0
+    Thread.sleep(1000);
   }
   
   override object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
     override def handle(event : MouseEvent) {
       test += 1;
       println("Mouse event! " + test);
-      
     }
   }
-  
   
 }
