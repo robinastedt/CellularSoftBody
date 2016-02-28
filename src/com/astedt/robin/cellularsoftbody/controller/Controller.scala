@@ -8,8 +8,6 @@ import view.Observer;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent
 
-import scala.collection.mutable.Queue;
-
 class Controller extends Observer with Runnable {
   val state = new State;
   val view = new View(state, this : Observer);
@@ -34,7 +32,7 @@ class Controller extends Observer with Runnable {
     
   }
   
-  object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
+  override object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
     override def handle(event : MouseEvent) {
       test += 1;
       println("Mouse event! " + test);
@@ -42,10 +40,5 @@ class Controller extends Observer with Runnable {
     }
   }
   
-  object OtherTestHandler extends EventHandler[MouseEvent] {
-    override def handle(event : MouseEvent) {
-      //Do stuff
-    }
-  }
   
 }
