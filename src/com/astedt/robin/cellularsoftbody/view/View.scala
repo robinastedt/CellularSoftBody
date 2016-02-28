@@ -36,5 +36,5 @@ class View(private val model : State, private val observer : ViewObserver) exten
   
   //Testing
   println("Testing: Creating new InputEvent from View constructor");
-  observer.handleInput(new InputEvent);
+  observer.receiveInput(new InputEvent);
 }
