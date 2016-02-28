@@ -1,5 +1,6 @@
-package com.astedt.robin.cellularsoftbody.view
+package com.astedt.robin.cellularsoftbody
+package view
 
 trait ViewObserver {
-  def handleInput(input: InputEvent);
+  def handleInput(input : InputEvent)
 }

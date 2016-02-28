@@ -6,7 +6,7 @@ import view.View;
 import view.ViewObserver;
 import view.InputEvent;
 
-class Controller extends Runnable with ViewObserver {
+class Controller extends ViewObserver with Runnable {
   val state = new State;
   val view = new View(state, this);
   val viewThread = new Thread(view);
@@ -15,12 +15,14 @@ class Controller extends Runnable with ViewObserver {
     println("Controller starting...");
     viewThread.start();
     println("Controller initializing finished! Starting controller logic...");
+    while (viewThread.isAlive()) step;
+  }
+  
+  def step() {
     
-    //TODO: Controller logic loop
   }
   
   def handleInput(input : InputEvent) {
-    //Testing
-    println("Observer: handled input");
+    println("Testing: Input handled");
   }
 }
