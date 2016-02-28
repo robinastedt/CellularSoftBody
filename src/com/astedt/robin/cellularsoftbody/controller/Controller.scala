@@ -2,11 +2,15 @@ package com.astedt.robin.cellularsoftbody;
 package controller;
 
 import model.State;
+import view.View;
 
 class Controller {
-  var state : State = new State();
+  var view = new View;
+  var state = new State;
+  
   
   def run() {
-    //TODO: logic and stuff
+    println("Controller started...");
+    view.main(Array.empty);
   }
 }
