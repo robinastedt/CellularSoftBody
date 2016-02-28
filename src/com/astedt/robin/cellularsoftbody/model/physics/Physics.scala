@@ -46,7 +46,6 @@ class MyFrame (var x : Double,
                var vx : Double,
                var vy : Double)
 extends Module[MyFrame, Double] { 
-  type M = MyFrame
   def +=(other : MyFrame) {
     x += other.x
     y += other.y
