@@ -3,17 +3,19 @@ package controller;
 
 import model.State;
 import view.View;
-import view.ViewObserver;
-import view.InputEvent;
+import view.Observer;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent
 
 import scala.collection.mutable.Queue;
 
-class Controller extends ViewObserver with Runnable {
+class Controller extends Observer with Runnable {
   val state = new State;
-  val view = new View(state, this);
+  val view = new View(state, this : Observer);
   val viewThread = new Thread(view);
   
-  val inputEventQueue = new Queue[InputEvent];
+  var test = 0;
   
   /**
    * Thread initialization
@@ -29,24 +31,21 @@ class Controller extends ViewObserver with Runnable {
    * Step function, called repeatedly as long as thread is alive
    */
   def step() {
-    while (!inputEventQueue.isEmpty) {
-      handleInput(inputEventQueue.dequeue())
+    
+  }
+  
+  object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
+    override def handle(event : MouseEvent) {
+      test += 1;
+      println("Mouse event! " + test);
+      
     }
   }
   
-  /**
-   * Called from Controller thread
-   */
-  def handleInput(event : InputEvent) {
-    println("Controller Testing: Input handled");
+  object OtherTestHandler extends EventHandler[MouseEvent] {
+    override def handle(event : MouseEvent) {
+      //Do stuff
+    }
   }
   
-  
-  /**
-   * Called from View thread
-   */
-  def receiveInput(event : InputEvent) {
-    inputEventQueue += event;
-    println("View Testing: Input received and handed over to Controller thread");
-  }
 }

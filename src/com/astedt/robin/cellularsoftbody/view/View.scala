@@ -1,6 +1,9 @@
 package com.astedt.robin.cellularsoftbody;
 package view;
 
+import javafx.scene.input.MouseEvent
+import javafx.event.EventHandler;
+
 import model.State;
 
 import scalafx.Includes._
@@ -9,10 +12,11 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
-class View(private val model : State, private val observer : ViewObserver) extends JFXApp with Runnable {
+class View(private val model : State, private val observer : Observer) extends JFXApp with Runnable {
   println("View initialized and started!");
   
   def run() {
+    //Start up window and graphics
     this.main(Array.empty);
   }
   
@@ -28,13 +32,10 @@ class View(private val model : State, private val observer : ViewObserver) exten
         width = 100
         height = 100
         fill <== when (hover) choose Color.Green otherwise Color.Red
-        
-        
+        onMouseClicked = observer.TestRectangleMouseHandler;
       }
+      
     }
   }
   
-  //Testing
-  println("Testing: Creating new InputEvent from View constructor");
-  observer.receiveInput(new InputEvent);
 }
