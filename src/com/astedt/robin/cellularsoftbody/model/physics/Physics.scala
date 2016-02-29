@@ -3,9 +3,11 @@ package model.physics;
 
 import data.structures.Module;
 
-// A Physical object is one which which has a physical manifestation
-// in the world. It can move, it reacts to forces, and it's got an
-// energy (which you can calculate).
+/**
+ * A Physical object is one which which has a physical manifestation
+ * in the world. It can move, it reacts to forces, and it's got an
+ * energy (which you can calculate).
+ */
 trait Physical[M <: Module[_, Double]] {
   type Position = (Double, Double)
   type Velocity = (Double, Double)
@@ -18,20 +20,26 @@ trait Physical[M <: Module[_, Double]] {
 }
 
 
-// Steppable is something that can be stepped forward in time. An object
-// can choose to implement this itself, or it can choose to implement
-// the derivative trait, and use an ODE solver to step.
+/**
+ * Steppable is something that can be stepped forward in time. An object
+ * can choose to implement this itself, or it can choose to implement
+ * the derivative trait, and use an ODE solver to step.
+ */
 trait Steppable {
   def step(dt : Double) : Unit
 }
 
-// Derivatives are used for ODE solvers.
+/**
+ *  Derivatives are used for ODE solvers.
+ */
 trait Derivative[M <: Module[_, Double]] {
   def d() : M
 }
 
-// This is an ODE solver. It calculates trajectory of something that is
-// a physical object, and has a derivative.
+/**
+ * This is an ODE solver. It calculates trajectory of something that is
+ * a physical object, and has a derivative.
+ */
 trait EulerForward[M <: Module[M,Double]] extends Steppable {
   this : Physical[M] with Derivative[M] =>
   def step(dt : Double) {
@@ -39,7 +47,9 @@ trait EulerForward[M <: Module[M,Double]] extends Steppable {
   }
 }
 
-// This is a simple physical frame, which a 'Physical' object can use.
+/**
+ * This is a simple physical frame, which a 'Physical' object can use.
+ */
 class MyFrame (var x : Double,
                var y : Double,
                var vx : Double,

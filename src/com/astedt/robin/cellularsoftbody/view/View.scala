@@ -16,9 +16,13 @@ import scalafx.scene.shape.Rectangle
 class View(private val model : State, private val observer : Observer) extends JFXApp with Runnable {
   println("View initialized and started!");
   
+  private var isRunning = true;
+  
   def run() {
     //Start up window and graphics
     this.main(Array.empty);
+    //Thread finished, notify inner threads
+    isRunning = false;
   }
   
   val canvas = new Canvas(200, 200) {
@@ -33,14 +37,14 @@ class View(private val model : State, private val observer : Observer) extends J
     scene = new Scene {
       fill = Color.LightGreen
       content = canvas
-      /*content = new Rectangle {
-        x = 25
-        y = 40
-        width = 100
-        height = 100
-        fill <== when (hover) choose Color.Green otherwise Color.Red
-        onMouseClicked = observer.TestRectangleMouseHandler;
-      }*/
+      //content = new Rectangle {
+      //  x = 25
+      //  y = 40
+      //  width = 100
+      //  height = 100
+      //  fill <== when (hover) choose Color.Green otherwise Color.Red
+      //  onMouseClicked = observer.TestRectangleMouseHandler;
+      //}
       
       
     }
@@ -51,8 +55,8 @@ class View(private val model : State, private val observer : Observer) extends J
   
   object DrawingComponent extends Runnable {
     override def run() {
-      while (true) {
-        gc.clearRect(0, 0, 600, 450)
+      while (isRunning) {
+        gc.clearRect(0,0,stage.width.value,stage.height.value)
         gc.fillRect(10, 10, 100 + 100*model.testing, 100)
         
         Thread.sleep(20)
