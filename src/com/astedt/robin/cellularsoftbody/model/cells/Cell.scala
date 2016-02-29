@@ -9,12 +9,14 @@ import org.jbox2d.dynamics._
 import org.jbox2d.common._
 
 object Cell {
+  def testCell(world : World) = new Cell(new Vec2(0,0), world);
+  
   //TODO: Update physics properties
-  def cellBodyDef(_position : Vec2) = new BodyDef {
+  def createBodyDef(_position : Vec2) = new BodyDef {
     userData = null;
   	position = new Vec2(_position);
   	angle = 0f;
-  	linearVelocity = new Vec2();
+  	linearVelocity = new Vec2(1,0);
   	angularVelocity = 0f;
   	linearDamping = 0f;
   	angularDamping = 0f;
@@ -28,9 +30,8 @@ object Cell {
   }
 }
 
-class Cell(position : Vec2, physicsWorld : World) 
-extends Body(Cell.cellBodyDef(position), physicsWorld) {
-  
+class Cell(position : Vec2, physicsWorld : World) {
+  val physicsBody = physicsWorld.createBody(Cell.createBodyDef(position));
 }
 
 

@@ -9,8 +9,8 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent
 
 class Controller extends Observer with Runnable {
-  val state = new Model;
-  val view = new View(state, this : Observer);
+  val model = new Model;
+  val view = new View(model, this : Observer);
   val viewThread = new Thread(view);
   
   var test = 0;
@@ -29,8 +29,10 @@ class Controller extends Observer with Runnable {
    * Step function, called repeatedly as long as thread is alive
    */
   def step() {
-    state.test = if (state.test == 0) 1 else 0
-    Thread.sleep(1000);
+    model.step(1.0 / 60.0);
+    model.test = if (model.test == 0) 1 else 0
+    println(model.cells(0).physicsBody.getPosition);
+    Thread.sleep(1000 / 60);
   }
   
   override object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
