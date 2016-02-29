@@ -5,7 +5,7 @@ import javafx.scene.input.MouseEvent
 import javafx.event.EventHandler;
 import scalafx.scene.canvas.Canvas
 
-import model.State;
+import model.Model;
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -13,7 +13,7 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
-class View(private val model : State, private val observer : Observer) extends JFXApp with Runnable {
+class View(private val model : Model, private val observer : Observer) extends JFXApp with Runnable {
   println("View initialized and started!");
   
   private var isRunning = true;

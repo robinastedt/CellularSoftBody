@@ -1,7 +1,7 @@
 package com.astedt.robin.cellularsoftbody;
 package controller;
 
-import model.State;
+import model.Model;
 import view.View;
 import view.Observer;
 
@@ -9,7 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent
 
 class Controller extends Observer with Runnable {
-  val state = new State;
+  val state = new Model;
   val view = new View(state, this : Observer);
   val viewThread = new Thread(view);
   
