@@ -6,7 +6,7 @@ import data.structures.Module;
 // A Physical object is one which which has a physical manifestation
 // in the world. It can move, it reacts to forces, and it's got an
 // energy (which you can calculate).
-trait Physical[M <: Module[M, Double]] {
+trait Physical[M <: Module[_, Double]] {
   type Position = (Double, Double)
   type Velocity = (Double, Double)
   type Acceleration = (Double, Double)
@@ -26,7 +26,7 @@ trait Steppable {
 }
 
 // Derivatives are used for ODE solvers.
-trait Derivative[M <: Module[M, Double]] {
+trait Derivative[M <: Module[_, Double]] {
   def d() : M
 }
 
@@ -38,7 +38,6 @@ trait EulerForward[M <: Module[M,Double]] extends Steppable {
     frame += d() * dt
   }
 }
-
 
 // This is a simple physical frame, which a 'Physical' object can use.
 class MyFrame (var x : Double,

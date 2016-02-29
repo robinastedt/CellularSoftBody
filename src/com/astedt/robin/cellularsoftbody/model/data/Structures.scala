@@ -4,7 +4,7 @@ package data.structures;
 
 // Modules
 
-trait Module[M <: Module[M,F],F] {
+trait Module[M <: Module[_,F],F] {
   this : M =>
   def +=(m : M) : Unit
   def +(m : M) : M
