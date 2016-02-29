@@ -9,43 +9,25 @@ import model.Model;
 import util.Timer;
 
 import scalafx.Includes._
-import scalafx.application.JFXApp
-import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
-class View(private val model : Model, private val observer : Observer) extends JFXApp with Runnable {
-  println("View initialized and started!");
+
+class View(private val model : Model, private val observer : Observer) {
   
-  def run() {
-    //Start up window and graphics
-    this.main(Array.empty);
-    //Thread finished, notify inner threads
-    updateTimer.stop
+  val WIDTH = 600;
+  val HEIGHT = 450;
+  val window = new Window(WIDTH, HEIGHT, observer, model);
+  val viewThread = new Thread(window);
+  
+  println("View: Initialized")
+  
+  def start() {
+    viewThread.start();
+    println("View: Started");
   }
   
-  val canvas = new Canvas(200, 200) {
-    onMouseClicked = observer.TestRectangleMouseHandler;
-  };
-  val gc = canvas.graphicsContext2D;
   
-  stage = new JFXApp.PrimaryStage {
-    title.value = "Hello Stage"
-    width = 600
-    height = 450
-    scene = new Scene {
-      fill = Color.LightGreen
-      content = canvas
-    }
-  }
   
-  val updateTimer = new Timer(20, true, step);
-  updateTimer.start
-  
-  def step {
-    gc.clearRect(0,0,stage.width.value,stage.height.value)
-    gc.fillRect(10, 10, 100 + 100*model.testing, 100)
-    println(model.cells(0).getPosition);
-  }
   
 }

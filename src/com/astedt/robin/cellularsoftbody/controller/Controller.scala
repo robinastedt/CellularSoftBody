@@ -4,41 +4,33 @@ package controller;
 import model.Model;
 import view.View;
 import view.Observer;
+import util._;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent
 
-class Controller extends Observer with Runnable {
-  val model = new Model;
-  val view = new View(model, this : Observer);
-  val viewThread = new Thread(view);
+class Controller extends Observer {
+  private val model = new Model();
+  private val view = new View(model, this : Observer);
+  private val controllerTimer = new Timer(1000 / 60, true, step);
   
-  var test = 0;
+  println("Controller: Initialized")
   
-  /**
-   * Thread initialization
-   */
-  def run() {
-    println("Controller starting...");
-    viewThread.start();
-    println("Controller initializing finished! Starting controller logic...");
-    while (viewThread.isAlive()) step;
+  def start() {
+    controllerTimer.start;
+    view.start();
+    println("Controller: Started");
   }
   
-  /**
-   * Step function, called repeatedly as long as thread is alive
-   */
-  def step() {
+  def step() = {
     model.step(1.0 / 60.0);
-    model.test = if (model.test == 0) 1 else 0
-    Thread.sleep(1000 / 60);
+    //Thread.sleep(1);
   }
   
-  override object TestRectangleMouseHandler extends EventHandler[MouseEvent] {
-    override def handle(event : MouseEvent) {
-      test += 1;
-      println("Mouse event! " + test);
-    }
+  override def notifyViewClosed() {
+    controllerTimer.stop
+    println("Controller: Stopped");
   }
+  
   
 }

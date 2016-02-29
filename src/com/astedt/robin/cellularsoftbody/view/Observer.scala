@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent
 trait Observer {
   def TestRectangleMouseHandler : EventHandler[MouseEvent] = EmptyMouseEvent;
   def OtherTestHandler : EventHandler[MouseEvent] = EmptyMouseEvent;
+  def notifyViewClosed();
 }
 
 private object EmptyMouseEvent extends EventHandler[MouseEvent] {

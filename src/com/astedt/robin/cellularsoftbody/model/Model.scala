@@ -3,32 +3,46 @@ package model;
 
 import cells.Cell
 
-import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics._;
 import org.jbox2d.common._;
+import org.jbox2d.collision.shapes._;
 
 import environment.Environment;
 
-object Model {
-  object Physics {
+private object Physics {
     val velocityIterations = 6;
     val positionIterations = 2;
     val gravity = new Vec2(0,9.82f)
   }
-}
 
 class Model {
-  println("Model initialized");
   
-  val physicsWorld = new World(Model.Physics.gravity);
+  val physicsWorld = new World(Physics.gravity);
+  initPhysicsWorld(physicsWorld);
   val environment = new Environment();
-  val cells : List[Cell] = List(Cell.testCell(physicsWorld));
+  val cells : List[Cell] = List(
+      Cell.testCell1(physicsWorld), 
+      Cell.testCell2(physicsWorld), 
+      Cell.testCell3(physicsWorld), 
+      Cell.testCell4(physicsWorld)
+    );
   
-  var test = 0;
-  def testing = test;
+  println("Model: Initialized")
+  
   
   def step(dt : Double) {
     physicsWorld.step(dt.toFloat, 
-        Model.Physics.velocityIterations, 
-        Model.Physics.positionIterations)
+        Physics.velocityIterations, 
+        Physics.positionIterations)
   }
+  
+  def initPhysicsWorld(physicsWorld : World) {
+    val groundBodyDef = new BodyDef();
+    groundBodyDef.position.set(0, 100);
+    val groundBody = physicsWorld.createBody(groundBodyDef);
+    val groundBox = new PolygonShape();
+    groundBox.setAsBox(50, 10);
+    groundBody.createFixture(groundBox, 0);
+  }
+ 
 }
