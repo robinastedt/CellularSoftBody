@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import scalafx.scene.canvas.Canvas
 
 import model.Model;
+import util.Timer;
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -16,13 +17,11 @@ import scalafx.scene.shape.Rectangle
 class View(private val model : Model, private val observer : Observer) extends JFXApp with Runnable {
   println("View initialized and started!");
   
-  private var isRunning = true;
-  
   def run() {
     //Start up window and graphics
     this.main(Array.empty);
     //Thread finished, notify inner threads
-    isRunning = false;
+    updateTimer.stop
   }
   
   val canvas = new Canvas(200, 200) {
@@ -37,30 +36,16 @@ class View(private val model : Model, private val observer : Observer) extends J
     scene = new Scene {
       fill = Color.LightGreen
       content = canvas
-      //content = new Rectangle {
-      //  x = 25
-      //  y = 40
-      //  width = 100
-      //  height = 100
-      //  fill <== when (hover) choose Color.Green otherwise Color.Red
-      //  onMouseClicked = observer.TestRectangleMouseHandler;
-      //}
-      
-      
     }
   }
   
-  val thread = new Thread(DrawingComponent);
-  thread.start();
+  val updateTimer = new Timer(20, true, step);
+  updateTimer.start
   
-  object DrawingComponent extends Runnable {
-    override def run() {
-      while (isRunning) {
-        gc.clearRect(0,0,stage.width.value,stage.height.value)
-        gc.fillRect(10, 10, 100 + 100*model.testing, 100)
-        
-        Thread.sleep(20)
-      }
-    }
+  def step {
+    gc.clearRect(0,0,stage.width.value,stage.height.value)
+    gc.fillRect(10, 10, 100 + 100*model.testing, 100)
+    println(model.cells(0).getPosition);
   }
+  
 }

@@ -31,7 +31,6 @@ class Controller extends Observer with Runnable {
   def step() {
     model.step(1.0 / 60.0);
     model.test = if (model.test == 0) 1 else 0
-    println(model.cells(0).physicsBody.getPosition);
     Thread.sleep(1000 / 60);
   }
   

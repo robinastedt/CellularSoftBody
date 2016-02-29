@@ -31,7 +31,9 @@ object Cell {
 }
 
 class Cell(position : Vec2, physicsWorld : World) {
-  val physicsBody = physicsWorld.createBody(Cell.createBodyDef(position));
+  private val physicsBody = physicsWorld.createBody(Cell.createBodyDef(position));
+  
+  def getPosition = physicsBody.getPosition
 }
 
 
