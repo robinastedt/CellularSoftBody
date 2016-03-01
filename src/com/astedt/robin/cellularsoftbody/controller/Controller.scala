@@ -31,6 +31,4 @@ class Controller extends Observer {
     controllerTimer.stop
     println("Controller: Stopped");
   }
-  
-  
 }
