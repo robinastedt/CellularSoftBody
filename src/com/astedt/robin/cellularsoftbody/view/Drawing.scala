@@ -24,19 +24,31 @@ class Drawing(val model : Model, val canvas : Canvas) {
     val gc = canvas.graphicsContext2D
     gc.restore
     gc.clearRect(0, 0, height, width)
+    /*
     val polygons = model.cells.par.map { cell => 
-        cell.getPositions.
+        cell.getSegmentVertices.
         par.map(jbox2dVec2ToVector3).
         par.map(v => viewTransform * v).
         par.map(v => (v.x, v.y))
     }
     
     polygons.seq.foreach(p => gc.strokePolygon(p.seq))
-    
+    */
     //Testing...
     val test = model.cells(0).getSegmentRadius * 60
-    polygons.seq.foreach(p => p.seq.foreach(p => gc.strokeOval(p._1-test, p._2-test, test*2, test*2)))
-    gc.stroke
+    
+    val cellSegments = model.cells.par.map { cell => 
+        cell.getSegmentPositions.
+        par.map(jbox2dVec2ToVector3).
+        par.map(v => viewTransform * v).
+        par.map(v => (v.x, v.y))
+    }
+    
+    cellSegments.seq.foreach(seg => 
+      seg.seq.foreach(p => 
+        gc.strokeOval(p._1-test, p._2-test, test*2, test*2)))
+    
+    
   }
   
   def jbox2dVec2ToVector3(vec : org.jbox2d.common.Vec2) = new Vector3(vec.x.toDouble, vec.y.toDouble, 1.0)

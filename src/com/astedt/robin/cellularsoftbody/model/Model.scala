@@ -12,7 +12,7 @@ import environment.Environment;
 private object Physics {
     val velocityIterations = 6;
     val positionIterations = 2;
-    val gravity = new Vec2(0,-9.82f/10)
+    val gravity = new Vec2(0,-9.82f)
   }
 
 class Model {
