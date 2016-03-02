@@ -15,6 +15,7 @@ import javafx.embed.swing.JFXPanel
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.{Group, Scene}
+import scalafx.animation.AnimationTimer
 
 class Window(
     _width : Int, _height : Int, 
@@ -37,7 +38,7 @@ class Window(
   
   val drawing = new Drawing(model, canvas)
   
-  val updateTimer = new Timer(20, true, drawing.updateCanvas);
+  val updateTimer = AnimationTimer(drawing.updateCanvas)
   updateTimer.start
   
   
