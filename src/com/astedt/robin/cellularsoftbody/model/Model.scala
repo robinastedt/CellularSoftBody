@@ -12,7 +12,7 @@ import environment.Environment;
 private object Physics {
     val velocityIterations = 6;
     val positionIterations = 2;
-    val gravity = new Vec2(0,-9.82f)
+    val gravity = new Vec2(0,-9.82f/10)
   }
 
 class Model {
@@ -21,13 +21,7 @@ class Model {
   initPhysicsWorld(physicsWorld);
   val environment = new Environment();
   val cells = Cell.testCells(physicsWorld)
-  /*val cells : List[Cell] = List(
-      Cell.testCell1(physicsWorld), 
-      Cell.testCell2(physicsWorld), 
-      Cell.testCell3(physicsWorld), 
-      Cell.testCell4(physicsWorld)
-    );
-  */
+  
   println("Model: Initialized")
   
   
