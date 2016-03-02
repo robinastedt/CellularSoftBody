@@ -12,8 +12,8 @@ import org.jbox2d.dynamics.joints._
 
 object Cell {
   
-  def testCells(world : World) = for (ix <- 0 to 0; iy <- 3 to 24) yield {
-    new Cell(new Vec2(ix*2.5f, iy*5f), world);
+  def testCells(world : World) = for (iy <- 1 to 20) yield {
+    new Cell(new Vec2((Math.random.toFloat-0.5f)*2f, iy*5f), world);
   }
 
 }
@@ -21,7 +21,7 @@ object Cell {
 class Cell(position : Vec2, physicsWorld : World) {
   
   private val radius = 1f;
-  private val segments = 32;
+  private val segments = 16;
   
   private val centerBody = physicsWorld.createBody(createCenterBodyDef(position))
   
@@ -117,6 +117,20 @@ class Cell(position : Vec2, physicsWorld : World) {
     //body.getPosition
     //new Vec2(body.getPosition.x + segmentRadius*Math.cos(body.getAngle).toFloat,
     //    body.getPosition.y + segmentRadius*Math.sin(body.getAngle).toFloat)
+  }
+  
+  def getSegmentVerticesQuad = (0 until segmentBodies.length*2).par.map { i => 
+    val pos = if ((i&1)==0) {
+      segmentBodies(i/2).getPosition
+    }
+    else {
+      val b0 = segmentBodies(i/2).getPosition
+      val b1 = segmentBodies((i/2+1) % segmentBodies.length).getPosition
+      new Vec2((b0.x + b1.x)/2,(b0.y + b1.y)/2)
+    }
+    val dirVec = pos.sub(centerBody.getPosition)
+    val len = dirVec.length()
+    pos.add(new Vec2(dirVec.x/len*segmentRadius*0.75f, dirVec.y/len*segmentRadius*0.75f))
   }
  	
   

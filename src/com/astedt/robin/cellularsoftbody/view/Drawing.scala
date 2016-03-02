@@ -5,8 +5,11 @@ import util._
 import model._
 import model.cells._
 
+import scalafx.Includes._
 import scalafx.scene.canvas.GraphicsContext
 import scalafx.scene.canvas.Canvas
+
+import scalafx.scene.shape._
 
 
 class Drawing(val model : Model, val canvas : Canvas) {
@@ -14,28 +17,49 @@ class Drawing(val model : Model, val canvas : Canvas) {
   def width = canvas.getWidth;
   def height = canvas.getHeight;
   
-
+  var zoom = 20.0;
+  
   var viewTransform = new Matrix3x3(
-      height/10.0, 0, width/2.0,
-      0, -height/10.0, height,
+      height/zoom, 0, width/2.0,
+      0, -height/zoom, height,
       0, 0, 1.0)
   
   def updateCanvas(time : Long) {
     val gc = canvas.graphicsContext2D
     gc.restore
     gc.clearRect(0, 0, height, width)
-    /*
+    
     val polygons = model.cells.par.map { cell => 
-        cell.getSegmentVertices.
+        cell.getSegmentVerticesQuad.
         par.map(jbox2dVec2ToVector3).
         par.map(v => viewTransform * v).
         par.map(v => (v.x, v.y))
     }
     
-    polygons.seq.foreach(p => gc.strokePolygon(p.seq))
-    */
+    //polygons.seq.foreach(p => gc.strokePolygon(p.seq))
+    polygons.seq.foreach(poly => {
+      val p = poly.seq
+      
+      gc.beginPath()
+      gc.moveTo(p(p.length-1)._1, p(p.length-1)._2)
+      for (i <- 0 until p.length / 2) {
+        val xc = p((i*2) % p.length)._1
+        val yc = p((i*2) % p.length)._2
+        val x1 = p((i*2+1) % p.length)._1
+        val y1 = p((i*2+1) % p.length)._2
+        gc.quadraticCurveTo(xc, yc, x1, y1)
+      }
+      //gc.closePath()
+      gc.strokePath()
+    })
+    
+    
+    
+    
+    
+    /*
     //Testing...
-    val test = model.cells(0).getSegmentRadius * 60
+    val test = model.cells(0).getSegmentRadius * 80
     
     val cellSegments = model.cells.par.map { cell => 
         cell.getSegmentPositions.
@@ -47,7 +71,7 @@ class Drawing(val model : Model, val canvas : Canvas) {
     cellSegments.seq.foreach(seg => 
       seg.seq.foreach(p => 
         gc.strokeOval(p._1-test, p._2-test, test*2, test*2)))
-    
+    */
     
   }
   

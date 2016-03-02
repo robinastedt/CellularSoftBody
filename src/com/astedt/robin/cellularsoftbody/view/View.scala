@@ -15,8 +15,8 @@ import scalafx.scene.shape.Rectangle
 
 class View(private val model : Model, private val observer : Observer) {
   
-  val WIDTH = 600;
-  val HEIGHT = 600;
+  val WIDTH = 800;
+  val HEIGHT = 800;
   val window = new Window(WIDTH, HEIGHT, observer, model);
   val viewThread = new Thread(window);
   

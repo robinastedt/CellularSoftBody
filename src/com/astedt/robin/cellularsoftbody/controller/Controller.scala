@@ -23,14 +23,13 @@ class Controller extends Observer {
   
   def start() {
     view.start();
-    Thread.sleep(5000)
+    Thread.sleep(1000)
     controllerTimer.start;
     println("Controller: Started");
   }
   
   def step() = {
     model.step(1.0 / Controller.tps * Controller.timeScale);
-    //Thread.sleep(1);
   }
   
   override def notifyViewClosed() {
