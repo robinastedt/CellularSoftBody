@@ -12,8 +12,8 @@ import org.jbox2d.dynamics.joints._
 
 object Cell {
   
-  def testCells(world : World) = for (ix <- -3 to 3; iy <- 5 to 6) yield {
-    new Cell(new Vec2(ix*1.1f, iy*1.1f), world);
+  def testCells(world : World) = for (ix <- -2 to 2; iy <- 5 to 6) yield {
+    new Cell(new Vec2(ix*1.5f, iy*1.5f), world);
   }
 
 }
