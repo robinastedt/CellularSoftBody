@@ -29,9 +29,12 @@ class Window(
     model : Model) 
     extends Runnable with JFXApp {
   
-  val canvas = new Canvas(_width, _height)
-  
-  
+  val canvas = new Canvas(_width, _height) {
+    onScroll = (e : ScrollEvent) => observer.handleScrollEvent(e)
+    onMouseDragged = (e : MouseEvent) => observer.handleMouseDraggedEvent(e)
+    onMousePressed = (e : MouseEvent) => observer.handleMousePressedEvent(e)
+  }
+  val drawing = new Drawing(model, canvas)
   val rootPane = new Group
   rootPane.children = List(canvas)
   
@@ -41,22 +44,14 @@ class Window(
       fill = Color.DarkOliveGreen
       root = rootPane
       onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
+      width.onChange(updateCanvasSize)
+      height.onChange(updateCanvasSize)
     }
     
   }
   
-  canvas.onScroll = (e : ScrollEvent) => observer.handleScrollEvent(e)
-  
-  canvas.onMouseDragged = (e : MouseEvent) => observer.handleMouseDraggedEvent(e)
-  canvas.onMousePressed = (e : MouseEvent) => observer.handleMousePressedEvent(e)
-  
-  val drawing = new Drawing(model, canvas)
-  
   val updateTimer = AnimationTimer(drawing.updateCanvas)
   updateTimer.start
-  
-  stage.width.onChange(updateCanvasSize)
-  stage.height.onChange(updateCanvasSize)
   
   var lastSceneWidth = sceneWidth
   var lastSceneHeight = sceneHeight
