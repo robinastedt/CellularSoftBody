@@ -11,15 +11,16 @@ import scalafx.scene.input.KeyEvent
 import scalafx.scene.input.ScrollEvent
 import scalafx.scene.input.MouseEvent
 
-object Controller {
-  var timeScale = 1
-  var tps = 60
-}
+
 
 class Controller extends Observer {
+  var timeScale = 1
+  var tps = 60
+  var zoomSpeed = 4
+  
   private val model = new Model();
   private val view = new View(model, this : Observer);
-  private val controllerTimer = new Timer(1000 / Controller.tps, true, step);
+  private val controllerTimer = new Timer(1000 / tps, true, step);
   
   println("Controller: Initialized")
   
@@ -31,7 +32,7 @@ class Controller extends Observer {
   }
   
   def step() = {
-    model.step(1.0 / Controller.tps * Controller.timeScale);
+    model.step(1.0 / tps * timeScale);
   }
   
   private var mousePressedX = 0.0;
@@ -51,7 +52,7 @@ class Controller extends Observer {
   }
   
   override def handleScrollEvent(event : ScrollEvent) {
-    view.zoom(event.deltaY / 100, event.x, event.y)
+    view.zoom(event.deltaY * zoomSpeed / 1000, event.x, event.y)
   }
   
   override def handleKeyEvent(event : KeyEvent) {

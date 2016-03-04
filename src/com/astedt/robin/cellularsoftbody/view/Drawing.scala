@@ -17,8 +17,8 @@ import org.jbox2d.common.Vec2
 
 class Drawing(val model : Model, val canvas : Canvas) {
   
-  def width = canvas.getWidth;
-  def height = canvas.getHeight;
+  def width = canvas.width.value;
+  def height = canvas.height.value;
   
   val zoom = 20.0;
   
@@ -66,9 +66,11 @@ class Drawing(val model : Model, val canvas : Canvas) {
   }
   
   def updateCanvas(time : Long) {
+    
     val gc = canvas.graphicsContext2D
+    
     gc.restore
-    gc.clearRect(0, 0, height, width)
+    gc.clearRect(0, 0, width, height)
     
     gc.fill_=(paint.Color.Beige)
     

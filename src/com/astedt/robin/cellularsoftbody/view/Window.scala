@@ -38,9 +38,12 @@ class Window(
       fill = Color.DarkOliveGreen
       root = rootPane
     }
+    
   }
   
   
+  
+ 
   
   canvas.onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
   
@@ -49,11 +52,30 @@ class Window(
   canvas.onMouseDragged = (e : MouseEvent) => observer.handleMouseDraggedEvent(e)
   canvas.onMousePressed = (e : MouseEvent) => observer.handleMousePressedEvent(e)
   
+  stage.width.onChange(updateCanvasWidth)
+  stage.height.onChange(updateCanvasHeight)
+  
   val drawing = new Drawing(model, canvas)
   
   val updateTimer = AnimationTimer(drawing.updateCanvas)
   updateTimer.start
   
+  var lastStageWidth = _width.toDouble
+  var lastStageHeight = _height.toDouble
+  
+  def updateCanvasWidth {
+    val deltaStageWidth = stage.width.value - lastStageWidth
+    translate(deltaStageWidth / 2, 0)
+    lastStageWidth = stage.width.value
+    canvas.width <== stage.width
+  }
+  
+  def updateCanvasHeight {
+    val deltaStageHeight = stage.height.value - lastStageHeight
+    translate(0, deltaStageHeight / 2)
+    lastStageHeight = stage.height.value
+    canvas.height <== stage.height
+  }
   
   override def run() {
     this.main(Array.empty)
