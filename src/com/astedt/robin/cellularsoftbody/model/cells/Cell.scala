@@ -12,7 +12,7 @@ import org.jbox2d.dynamics.joints._
 
 object Cell {
   
-  def testCells(world : World) = for (iy <- 1 to 20) yield {
+  def testCells(world : World) = for (iy <- 1 to 50) yield {
     new Cell(new Vec2((Math.random.toFloat-0.5f)*2f, iy*5f), world);
   }
 
@@ -76,7 +76,7 @@ class Cell(position : Vec2, physicsWorld : World) {
     );
   	linearVelocity = new Vec2();
   	angularVelocity = 0f;
-  	linearDamping = 0f;
+  	linearDamping = 1f;
   	angularDamping = 0f;
   	allowSleep = true;
   	awake = true;
@@ -93,7 +93,7 @@ class Cell(position : Vec2, physicsWorld : World) {
   	position = pos;
   	linearVelocity = new Vec2();
   	angularVelocity = 0f;
-  	linearDamping = 0f;
+  	linearDamping = 1f;
   	angularDamping = 0f;
   	allowSleep = true;
   	awake = true;
@@ -103,6 +103,10 @@ class Cell(position : Vec2, physicsWorld : World) {
   	active = true;
   	gravityScale = 1.0f;
   }
+  
+  def getRadius = radius
+  
+  def getCenterPostion = centerBody.getPosition
   
   def getSegmentRadius = segmentRadius
   

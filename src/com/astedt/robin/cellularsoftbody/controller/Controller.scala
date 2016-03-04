@@ -11,7 +11,7 @@ import javafx.scene.input.MouseEvent
 
 object Controller {
   var timeScale = 1
-  var tps = 60 * 4
+  var tps = 60
 }
 
 class Controller extends Observer {

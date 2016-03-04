@@ -31,7 +31,7 @@ class Window(
   stage = new JFXApp.PrimaryStage {
     title.value = "Cellular Soft Body"
     scene = new Scene(_width, _height) {
-      fill = Color.LightGreen
+      fill = Color.DARKOLIVEGREEN
       root = rootPane
     }
   }

@@ -36,21 +36,21 @@ class Model {
     groundBodyDef.position.set(0, -1);
     val groundBody = physicsWorld.createBody(groundBodyDef);
     val groundBox = new PolygonShape();
-    groundBox.setAsBox(5, 1);
+    groundBox.setAsBox(40, 1);
     groundBody.createFixture(groundBox, 0);
     
     val wall1BodyDef = new BodyDef();
     wall1BodyDef.position.set(-6, 5);
     val wall1Body = physicsWorld.createBody(wall1BodyDef);
     val wall1Box = new PolygonShape();
-    wall1Box.setAsBox(1, 5);
+    wall1Box.setAsBox(0.5f, 5);
     wall1Body.createFixture(wall1Box, 0);
     
     val wall2BodyDef = new BodyDef();
     wall2BodyDef.position.set(6, 5);
     val wall2Body = physicsWorld.createBody(wall2BodyDef);
     val wall2Box = new PolygonShape();
-    wall2Box.setAsBox(1, 5);
+    wall2Box.setAsBox(0.5f, 5);
     wall2Body.createFixture(wall2Box, 0);
     
   }
