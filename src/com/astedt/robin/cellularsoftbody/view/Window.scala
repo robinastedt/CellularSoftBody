@@ -5,17 +5,21 @@ import util._
 import model.Model
 
 import scalafx.Includes._
-import javafx.scene.input.MouseEvent
-import javafx.event.EventHandler;
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.canvas.GraphicsContext
 import scalafx.Includes._
 import scalafx.application.JFXApp
-import javafx.embed.swing.JFXPanel
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.{Group, Scene}
 import scalafx.animation.AnimationTimer
+import scalafx.scene.input.KeyEvent
+import scalafx.scene.input.MouseEvent
+import scalafx.scene.input.ScrollEvent
+import scalafx.scene.input.MouseDragEvent
+import scalafx.event.EventType
+import scalafx.scene.input.KeyCode
+
 
 class Window(
     _width : Int, _height : Int, 
@@ -31,10 +35,19 @@ class Window(
   stage = new JFXApp.PrimaryStage {
     title.value = "Cellular Soft Body"
     scene = new Scene(_width, _height) {
-      fill = Color.DARKOLIVEGREEN
+      fill = Color.DarkOliveGreen
       root = rootPane
     }
   }
+  
+  
+  
+  canvas.onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
+  
+  canvas.onScroll = (e : ScrollEvent) => observer.handleScrollEvent(e)
+  
+  canvas.onMouseDragged = (e : MouseEvent) => observer.handleMouseDraggedEvent(e)
+  canvas.onMousePressed = (e : MouseEvent) => observer.handleMousePressedEvent(e)
   
   val drawing = new Drawing(model, canvas)
   
@@ -49,5 +62,12 @@ class Window(
     observer.notifyViewClosed()
   }
   
+  def zoom(amount: Double, xCenter : Double, yCenter : Double) {
+    drawing.zoom(amount, xCenter, yCenter)
+  }
+  
+  def translate(x : Double, y : Double) {
+    drawing.translate(x, y)
+  }
   
 }

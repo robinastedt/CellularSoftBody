@@ -6,8 +6,10 @@ import view.View;
 import view.Observer;
 import util._;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent
+import scalafx.Includes._
+import scalafx.scene.input.KeyEvent
+import scalafx.scene.input.ScrollEvent
+import scalafx.scene.input.MouseEvent
 
 object Controller {
   var timeScale = 1
@@ -30,6 +32,30 @@ class Controller extends Observer {
   
   def step() = {
     model.step(1.0 / Controller.tps * Controller.timeScale);
+  }
+  
+  private var mousePressedX = 0.0;
+  private var mousePressedY = 0.0;
+  
+  override def handleMousePressedEvent(event : MouseEvent) {
+    mousePressedX = event.x
+    mousePressedY = event.y
+  }
+  
+  override def handleMouseDraggedEvent(event : MouseEvent) {
+    val deltaX = mousePressedX - event.x
+    val deltaY = mousePressedY - event.y
+    mousePressedX = event.x
+    mousePressedY = event.y
+    view.translate(-deltaX, -deltaY)
+  }
+  
+  override def handleScrollEvent(event : ScrollEvent) {
+    view.zoom(event.deltaY / 100, event.x, event.y)
+  }
+  
+  override def handleKeyEvent(event : KeyEvent) {
+    println("Test: Key")
   }
   
   override def notifyViewClosed() {

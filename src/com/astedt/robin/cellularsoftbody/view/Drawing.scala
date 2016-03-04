@@ -26,6 +26,21 @@ class Drawing(val model : Model, val canvas : Canvas) {
       height/zoom, 0, width/2.0,
       0, -height/zoom, height,
       0, 0, 1.0)
+  
+  def zoomMatrix(amount: Double) : Matrix3x3[Double] = {
+    new Matrix3x3(
+        1 + amount, 0, 0,
+        0, 1 + amount, 0,
+        0, 0 , 1)
+  }
+  
+  def translateMatrix(x : Double, y : Double) : Matrix3x3[Double] = {
+    new Matrix3x3(
+        1, 0, x,
+        0, 1, y,
+        0, 0, 1)
+  }
+      
       
   //TODO: Fix this, not working
   //Only works with default transformation matrix
@@ -36,6 +51,18 @@ class Drawing(val model : Model, val canvas : Canvas) {
     //val vp1 = jbox2dVec2ToTransformedVector3(mp1)
     //(vp0.x >= 0 && vp1.x < width && vp0.y >= 0 && vp1.y < height)
     true
+  }
+  
+  def translate(x : Double, y : Double) {
+    viewTransform = translateMatrix(x, y) * viewTransform
+  }
+  
+  def zoom(amount: Double, xCenter : Double, yCenter : Double) {
+    viewTransform = 
+      translateMatrix(xCenter, yCenter) * 
+      zoomMatrix(amount) * 
+      translateMatrix(-xCenter, -yCenter) * 
+      viewTransform
   }
   
   def updateCanvas(time : Long) {

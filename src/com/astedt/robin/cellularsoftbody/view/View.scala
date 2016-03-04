@@ -28,4 +28,12 @@ class View(private val model : Model, private val observer : Observer) {
     println("View: Started");
   }
   
+  def zoom(amount : Double, xCenter : Double, yCenter : Double) {
+    window.zoom(amount, xCenter, yCenter)
+  }
+  
+  def translate(x : Double, y : Double) {
+    window.translate(x, y)
+  }
+  
 }

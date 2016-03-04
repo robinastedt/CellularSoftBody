@@ -132,6 +132,10 @@ class Matrix3x3[@specialized N](
         num.plus(num.times(e31,v.x),num.plus(num.times(e32,v.y),num.times(e33,v.z)))
     )
   }
+  
+  override def toString = {
+    e11 + " " + e12 + " " + e13 + "\n" + e21 + " " + e22 + " " + e23 + "\n" + e31 + " " + e32 + " " + e33
+  }
 }
 
 

@@ -1,18 +1,18 @@
 package com.astedt.robin.cellularsoftbody;
 package view;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent
+import scalafx.Includes._
+import scalafx.scene.input.KeyEvent
+import scalafx.scene.input.MouseEvent
+import scalafx.scene.input.ScrollEvent
+import scalafx.scene.input.MouseDragEvent
 
 trait Observer {
-  def TestRectangleMouseHandler : EventHandler[MouseEvent] = EmptyMouseEvent;
-  def OtherTestHandler : EventHandler[MouseEvent] = EmptyMouseEvent;
-  def notifyViewClosed();
+  def handleKeyEvent(event : KeyEvent)
+  def handleScrollEvent(event : ScrollEvent)
+  def handleMouseDraggedEvent(event : MouseEvent)
+  def handleMousePressedEvent(event : MouseEvent)
+  def notifyViewClosed()
 }
 
-private object EmptyMouseEvent extends EventHandler[MouseEvent] {
-  override def handle(event : MouseEvent) {
-    //Do nothing
-  }
-}
     
