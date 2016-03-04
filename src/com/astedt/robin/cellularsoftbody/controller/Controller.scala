@@ -20,7 +20,7 @@ object Controller {
   private val TWEAK_ZOOM_SPEED_SCROLL = 0.02
   
   //KEY_ZOOM_SPEED_TWEAK:
-  //40 times as SCROLL_ZOOM_SPEED_TWEAK to make one key press do the same as one scroll event
+  //40 times as TWEAK_ZOOM_SPEED_SCROLL to make one key press do the same as one scroll event
   private val TWEAK_ZOOM_SPEED_KEY = TWEAK_ZOOM_SPEED_SCROLL * 40
   
   //KEY_TRANSLATE_SPEED_TWEAK: 
