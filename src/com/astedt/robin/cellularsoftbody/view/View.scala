@@ -15,10 +15,12 @@ import scalafx.scene.shape.Rectangle
 
 class View(private val model : Model, private val observer : Observer) {
   
-  val WIDTH = 800;
-  val HEIGHT = 800;
-  val window = new Window(WIDTH, HEIGHT, observer, model);
+  private val DEFAULT_WIDTH = 800
+  private val DEFAULT_HEIGHT = 800
+  
+  val window = new Window(DEFAULT_WIDTH, DEFAULT_HEIGHT, observer, model);
   val viewThread = new Thread(window);
+  
   
   
   println("View: Initialized")
@@ -35,5 +37,8 @@ class View(private val model : Model, private val observer : Observer) {
   def translate(x : Double, y : Double) {
     window.translate(x, y)
   }
+  
+  def width = window.sceneWidth
+  def height = window.sceneHeight
   
 }

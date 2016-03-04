@@ -17,6 +17,8 @@ import scalafx.scene.input.KeyEvent
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.input.ScrollEvent
 import scalafx.scene.input.MouseDragEvent
+import scalafx.scene.input.InputEvent
+import scalafx.event.EventHandler
 import scalafx.event.EventType
 import scalafx.scene.input.KeyCode
 
@@ -29,6 +31,7 @@ class Window(
   
   val canvas = new Canvas(_width, _height)
   
+  
   val rootPane = new Group
   rootPane.children = List(canvas)
   
@@ -37,11 +40,10 @@ class Window(
     scene = new Scene(_width, _height) {
       fill = Color.DarkOliveGreen
       root = rootPane
+      onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
     }
     
   }
-  
-  canvas.onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
   
   canvas.onScroll = (e : ScrollEvent) => observer.handleScrollEvent(e)
   
