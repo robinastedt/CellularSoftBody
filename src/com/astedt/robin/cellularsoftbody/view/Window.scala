@@ -41,10 +41,6 @@ class Window(
     
   }
   
-  
-  
- 
-  
   canvas.onKeyPressed = (e: KeyEvent) => observer.handleKeyEvent(e)
   
   canvas.onScroll = (e : ScrollEvent) => observer.handleScrollEvent(e)
@@ -52,29 +48,28 @@ class Window(
   canvas.onMouseDragged = (e : MouseEvent) => observer.handleMouseDraggedEvent(e)
   canvas.onMousePressed = (e : MouseEvent) => observer.handleMousePressedEvent(e)
   
-  stage.width.onChange(updateCanvasWidth)
-  stage.height.onChange(updateCanvasHeight)
-  
   val drawing = new Drawing(model, canvas)
   
   val updateTimer = AnimationTimer(drawing.updateCanvas)
   updateTimer.start
   
-  var lastStageWidth = _width.toDouble
-  var lastStageHeight = _height.toDouble
+  stage.width.onChange(updateCanvasSize)
+  stage.height.onChange(updateCanvasSize)
   
-  def updateCanvasWidth {
-    val deltaStageWidth = stage.width.value - lastStageWidth
-    translate(deltaStageWidth / 2, 0)
-    lastStageWidth = stage.width.value
-    canvas.width <== stage.width
-  }
+  var lastSceneWidth = sceneWidth
+  var lastSceneHeight = sceneHeight
   
-  def updateCanvasHeight {
-    val deltaStageHeight = stage.height.value - lastStageHeight
-    translate(0, deltaStageHeight / 2)
-    lastStageHeight = stage.height.value
-    canvas.height <== stage.height
+  def sceneWidth = stage.scene.value.width.value
+  def sceneHeight = stage.scene.value.height.value
+  
+  def updateCanvasSize {
+    val deltaSceneWidth = sceneWidth - lastSceneWidth
+    val deltaSceneHeight = sceneHeight - lastSceneHeight
+    translate(deltaSceneWidth / 2, deltaSceneHeight / 2)
+    lastSceneWidth = sceneWidth
+    lastSceneHeight = sceneHeight
+    canvas.width <== sceneWidth
+    canvas.height <== sceneHeight
   }
   
   override def run() {
